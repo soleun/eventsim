@@ -1,0 +1,71 @@
+Label,Event Type,Type,Subtype,Details,Eccentricity,Closeness Centrality,Betweenness Centrality,Modularity Class,New Session
+Web Searched,Web Searched,E-Commerce,,,5,2.865671642,1.166666667,1,10000
+Page Viewed - Home Page,Page Viewed,E-Commerce,,Home Page,5,2.52238806,619.9026335,4,1000
+Product Searched,Product Searched,Marketing Activities,Product Interactions,,4,2.492537313,213.9857504,4,1000
+Advertising Presented,Advertising Presented,Marketing Activities,Advertising,,6,3.71641791,14.25,0,800
+Email Sent - Cart Abandoned,Email Sent,Marketing Activities,Emailing,Cart Abandoned,5,3.552238806,16.94967532,0,800
+Email Sent - Receipt,Email Sent,Marketing Activities,Emailing,Receipt,5,3.358208955,33.61158009,3,800
+Email Sent - Service Request Confirmation,Email Sent,Marketing Activities,Emailing,Service Request Confirmation,6,3.656716418,43.26958874,7,800
+Email Sent - Surveys,Email Sent,Marketing Activities,Emailing,Surveys,5,2.805970149,311.1608225,3,800
+Promotion Sent,Promotion Sent,Marketing Activities,Promotion,,7,5.104477612,0,2,500
+Loyalty Card Registration,Loyalty Card Registration,Marketing Activities,Loyalty,,7,4.597014925,0,3,400
+Application Session Started,Application Session Started,Mobile Activities,,,6,3.388059701,166.9861111,4,350
+Loyalty Card Presented,Loyalty Card Presented,Marketing Activities,Loyalty,,6,3.626865672,130,3,300
+Application Registration,Application Registration,Mobile Activities,,,7,4.358208955,0,4,200
+Coupon Sent,Coupon Sent,Marketing Activities,Couponing,,7,5.074626866,0,3,200
+Reward Sent,Reward Sent,Marketing Activities,Loyalty,,7,4.597014925,0,3,200
+Received Service Request,Received Service Request,Service Center,,,6,3.507462687,78.72063492,7,100
+Application Detection,Application Detection,Mobile Activities,,,6,4,0,4,50
+Return in Store,Return in Store,E-Commerce,,,6,3.701492537,0,3,50
+Add To Cart,Add To Cart,E-Commerce,,,4,2.23880597,999.902886,2,0
+Advertising Clicked,Advertising Clicked,Marketing Activities,Advertising,,6,3.611940299,25.1547619,1,0
+Application Login,Application Login,Mobile Activities,,,7,4.358208955,0,4,0
+Assigned Service Request,Assigned Service Request,Service Center,,,7,4.328358209,0,7,0
+Bar Code Scanned,Bar Code Scanned,Mobile Activities,,,5,3.358208955,57.63690476,4,0
+Cart Abandoned,Cart Abandoned,E-Commerce,,,5,3.059701493,79.3952381,0,0
+Checkout,Checkout,E-Commerce,,,5,2.71641791,477.6349206,3,0
+Consumer Beliefs Captured,Consumer Beliefs Captured,Marketing Activities,Survey,,6,3.791044776,0,3,0
+Consumer Satisfaction Captured,Consumer Satisfaction Captured,Marketing Activities,Survey,,6,3.791044776,0,3,0
+Coupon Accepted,Coupon Accepted,Marketing Activities,Couponing,,5,3.134328358,150.7,3,0
+Coupon Redeemed,Coupon Redeemed,Marketing Activities,Couponing,,6,3.611940299,16.67857143,3,0
+Coupon Viewed,Coupon Viewed,Marketing Activities,Couponing,,6,4.089552239,66,3,0
+Created Service Request,Created Service Request,Service Center,,,6,3.895522388,59.22857143,7,0
+Customer Registration,Customer Registration,Customer Interactions,,,6,3.28358209,77.40321068,7,0
+Email Bounced,Email Bounced,Marketing Activities,Emailing,,6,3.447761194,58.85595238,3,0
+Email Clicked,Email Clicked,Marketing Activities,Emailing,,5,2.76119403,99.85974026,1,0
+Email Marketing Registration,Email Marketing Registration,Marketing Activities,Engagement,,6,3.462686567,0,1,0
+Email Opened,Email Opened,Marketing Activities,Emailing,,6,3.149253731,86.41212121,3,0
+Facebook Page Liked,Facebook Page Liked,Social Network,Facebook,,6,3.507462687,0,4,0
+Facebook Post,Facebook Post,Social Network,Facebook,,5,3.164179104,0,1,0
+Facebook Post Commented,Facebook Post Commented,Social Network,Facebook,,5,3.164179104,0,1,0
+Facebook Post Liked,Facebook Post Liked,Social Network,Facebook,,5,3.164179104,0,1,0
+Facebook Post Shared,Facebook Post Shared,Social Network,Facebook,,5,3.149253731,0,2,0
+Instagram Post,Instagram Post,Social Network,Instagram,,5,3.164179104,0,1,0
+Instagram Post Liked,Instagram Post Liked,Social Network,Instagram,,5,3.164179104,0,1,0
+Landing Page Viewed,Landing Page Viewed,Marketing Activities,Engagement,,5,2.71641791,103.8945887,1,0
+Marketing Content Downloaded,Marketing Content Downloaded,Marketing Activities,Engagement,,6,3.820895522,0,1,0
+Marketing Content Viewed,Marketing Content Viewed,Marketing Activities,Engagement,,5,2.835820896,131,1,0
+Marketing Event Registration,Marketing Event Registration,Marketing Activities,Engagement,,5,2.895522388,0,1,0
+Marketing Video Played,Marketing Video Played,Marketing Activities,Engagement,,6,3.820895522,0,1,0
+NPS Survey Captured,NPS Survey Captured,Marketing Activities,Survey,,6,3.791044776,0,3,0
+Page Viewed - Error Page,Page Viewed,E-Commerce,,Error Page,5,3.014925373,0,2,0
+Product Compared,Product Compared,Marketing Activities,Product Interactions,,5,2.76119403,0,2,0
+Product Rated,Product Rated,Marketing Activities,Product Interactions,,5,2.76119403,0,2,0
+Product Recommended,Product Recommended,Marketing Activities,Product Interactions,,5,2.76119403,0,1,0
+Product Reviewed,Product Reviewed,Marketing Activities,Product Interactions,,5,2.76119403,0,2,0
+Product Shared,Product Shared,Marketing Activities,Product Interactions,,5,2.746268657,12.66666667,2,0
+Product Viewed,Product Viewed,Marketing Activities,Product Interactions,,4,2.179104478,942.0437229,1,0
+Promotion Applied,Promotion Applied,Marketing Activities,Promotion,,5,3.164179104,130,2,0
+Promotion Viewed,Promotion Viewed,Marketing Activities,Promotion,,6,4.119402985,66,2,0
+Resolved Service Request,Resolved Service Request,Service Center,,,7,3.611940299,81.4524531,7,0
+Reward Redeemed,Reward Redeemed,Marketing Activities,Loyalty,,6,3.656716418,0,3,0
+Set Customer Profile,Set Customer Profile,Customer Interactions,,,6,3.28358209,77.40321068,7,0
+Subscription,Subscription,Customer Interactions,,,0,0,0,5,0
+Twitter Favorited,Twitter Favorited,Social Network,Twitter,,5,3.164179104,0,1,0
+Twitter Followed,Twitter Followed,Social Network,Twitter,,6,3.507462687,0,4,0
+Twitter Retweeted,Twitter Retweeted,Social Network,Twitter,,6,4.119402985,0,1,0
+Twitter Tweeted,Twitter Tweeted,Social Network,Twitter,,5,3.134328358,66,1,0
+Un-Subscription,Un-Subscription,Customer Interactions,,,0,0,0,6,0
+Updated Service Request,Updated Service Request,Service Center,,,7,3.776119403,38.67301587,7,0
+Web Login,Web Login,E-Commerce,,,6,3.507462687,0,4,0
+Willingness to Recommend Captured,Willingness to Recommend Captured,Marketing Activities,Survey,,6,3.791044776,0,3,0

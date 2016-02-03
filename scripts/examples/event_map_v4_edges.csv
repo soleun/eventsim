@@ -1,0 +1,121 @@
+Source,Target,Weight,Transition Time
+Checkout,Return in Store,0.1,240.00000
+Email Sent - Service Request Confirmation,Email Opened,0.05,120.00000
+Email Sent - Surveys,Consumer Beliefs Captured,0.005,120.00000
+Email Sent - Surveys,Consumer Satisfaction Captured,0.045,120.00000
+Email Sent - Surveys,NPS Survey Captured,0.015,120.00000
+Email Sent - Surveys,Willingness to Recommend Captured,0.02,120.00000
+Loyalty Card Registration,Loyalty Card Presented,0.5,120.00000
+Reward Sent,Loyalty Card Presented,0.6,120.00000
+Assigned Service Request,Resolved Service Request,0.2,72.00000
+Checkout,Received Service Request,0.05,72.00000
+Created Service Request,Resolved Service Request,0.2,72.00000
+Updated Service Request,Resolved Service Request,0.6,72.00000
+Assigned Service Request,Updated Service Request,0.6,48.00000
+Created Service Request,Updated Service Request,0.1,48.00000
+Updated Service Request,Customer Registration,0.1,48.00000
+Updated Service Request,Set Customer Profile,0.05,48.00000
+Add To Cart,Cart Abandoned,0.1,24.00000
+Add To Cart,Email Sent - Surveys,0.09,24.00000
+Checkout,Email Sent - Receipt,0.6,24.00000
+Checkout,Email Sent - Surveys,0.2,24.00000
+Coupon Accepted,Add To Cart,0.1,24.00000
+Coupon Accepted,Coupon Redeemed,0.75,24.00000
+Coupon Sent,Coupon Viewed,0.15,24.00000
+Promotion Sent,Promotion Viewed,0.03,24.00000
+Email Sent - Cart Abandoned,Email Opened,0.03,5.00000
+Application Session Started,Application Detection,0.1,1.00000
+Cart Abandoned,Advertising Presented,0.6,1.00000
+Coupon Viewed,Coupon Accepted,0.3,1.00000
+Created Service Request,Assigned Service Request,0.4,1.00000
+Email Sent - Receipt,Email Opened,0.2,1.00000
+Loyalty Card Registration,Reward Sent,0.5,1.00000
+Promotion Viewed,Promotion Applied,0.4,1.00000
+Resolved Service Request,Email Sent - Service Request Confirmation,0.8,1.00000
+Add To Cart,Checkout,0.3,0.50000
+Page Viewed - Home Page,Set Customer Profile,0.05,0.16700
+Resolved Service Request,Customer Registration,0.1,0.16700
+Resolved Service Request,Set Customer Profile,0.05,0.16700
+Application Detection,Application Session Started,0.25,0.08300
+Application Detection,Bar Code Scanned,0.35,0.08300
+Application Session Started,Bar Code Scanned,0.2,0.08300
+Cart Abandoned,Email Sent - Cart Abandoned,0.3,0.08300
+Customer Registration,Set Customer Profile,0.25,0.08300
+Email Opened,Email Clicked,0.05,0.08300
+Landing Page Viewed,Checkout,0.01,0.08300
+Page Viewed - Home Page,Customer Registration,0.09,0.08300
+Product Compared,Add To Cart,0.05,0.08300
+Product Rated,Add To Cart,0.05,0.08300
+Product Recommended,Add To Cart,0.05,0.08300
+Product Reviewed,Add To Cart,0.2,0.08300
+Product Searched,Add To Cart,0.02,0.08300
+Product Shared,Add To Cart,0.3,0.08300
+Product Viewed,Add To Cart,0.2,0.08300
+Product Viewed,Product Recommended,0.15,0.08300
+Received Service Request,Created Service Request,0.9,0.08300
+Twitter Tweeted,Twitter Retweeted,0.03,0.08300
+Page Viewed - Home Page,Checkout,0.01,0.08000
+Web Login,Page Viewed - Home Page,0.99,0.08000
+Landing Page Viewed,Email Marketing Registration,0.05,0.03300
+Landing Page Viewed,Marketing Event Registration,0.05,0.03300
+Page Viewed - Home Page,Web Login,0.15,0.03300
+Page Viewed - Home Page,Email Marketing Registration,0.01,0.03000
+Page Viewed - Home Page,Marketing Event Registration,0.01,0.03000
+Advertising Presented,Advertising Clicked,0.03,0.01670
+Application Registration,Application Login,0.2,0.01670
+Email Sent - Cart Abandoned,Email Bounced,0.05,0.01670
+Email Sent - Receipt,Email Bounced,0.05,0.01670
+Email Sent - Service Request Confirmation,Email Bounced,0.05,0.01670
+Email Sent - Surveys,Email Bounced,0.05,0.01670
+Marketing Content Viewed,Marketing Content Downloaded,0.03,0.01670
+Marketing Content Viewed,Marketing Video Played,0.1,0.01670
+Marketing Content Viewed,Product Viewed,0.3,0.01670
+Marketing Event Registration,Product Viewed,0.2,0.01670
+Product Viewed,Facebook Post,0.02,0.01670
+Product Viewed,Facebook Post Commented,0.005,0.01670
+Product Viewed,Facebook Post Liked,0.005,0.01670
+Product Viewed,Facebook Post Shared,0.005,0.01670
+Product Viewed,Instagram Post,0.01,0.01670
+Product Viewed,Instagram Post Liked,0.01,0.01670
+Product Viewed,Product Compared,0.05,0.01670
+Product Viewed,Product Rated,0.01,0.01670
+Product Viewed,Product Shared,0.05,0.01670
+Product Viewed,Twitter Favorited,0.02,0.01670
+Product Viewed,Twitter Tweeted,0.02,0.01670
+Promotion Viewed,Page Viewed - Home Page,0.1,0.01670
+Promotion Viewed,Product Viewed,0.15,0.01670
+Return in Store,Received Service Request,0.9,0.01670
+Page Viewed - Home Page,Facebook Page Liked,0.01,0.01600
+Page Viewed - Home Page,Twitter Followed,0.01,0.01600
+Page Viewed - Home Page,Product Searched,0.3,0.00130
+Add To Cart,Page Viewed - Error Page,0.01,0.00055
+Advertising Clicked,Landing Page Viewed,1,0.00055
+Application Login,Application Session Started,1,0.00055
+Application Registration,Application Session Started,0.8,0.00055
+Application Session Started,Page Viewed - Home Page,0.4,0.00055
+Bar Code Scanned,Product Searched,0.9,0.00055
+Checkout,Page Viewed - Error Page,0.01,0.00055
+Coupon Redeemed,Checkout,1,0.00055
+Email Clicked,Landing Page Viewed,0.6,0.00055
+Email Clicked,Page Viewed - Home Page,0.1,0.00055
+Email Clicked,Product Viewed,0.3,0.00055
+Email Marketing Registration,Page Viewed - Home Page,0.8,0.00055
+Landing Page Viewed,Marketing Content Viewed,0.15,0.00055
+Landing Page Viewed,Page Viewed - Home Page,0.05,0.00055
+Landing Page Viewed,Product Viewed,0.15,0.00055
+Loyalty Card Presented,Checkout,0.7,0.00055
+Loyalty Card Presented,Reward Redeemed,0.25,0.00055
+Marketing Content Viewed,Page Viewed - Home Page,0.2,0.00055
+Marketing Event Registration,Page Viewed - Home Page,0.7,0.00055
+Product Searched,Product Viewed,0.35,0.00055
+Product Shared,Facebook Post Shared,0.01,0.00055
+Product Viewed,Marketing Content Viewed,0.2,0.00055
+Product Viewed,Product Reviewed,0.01,0.00055
+Promotion Applied,Add To Cart,0.1,0.00055
+Reward Redeemed,Checkout,0.9,0.00055
+Page Viewed - Home Page,Marketing Content Viewed,0.01,0.00050
+Page Viewed - Home Page,Product Viewed,0.25,0.00050
+Web Searched,Landing Page Viewed,0.18,0.00050
+Web Searched,Page Viewed - Home Page,0.1,0.00050
+Web Searched,Product Searched,0.05,0.00050
+Web Searched,Product Viewed,0.15,0.00050
