@@ -19,7 +19,8 @@ class User(val alpha: Double,
            val props: Map[String,Any],
            var device: scala.collection.immutable.Map[String,Any],
            val initialLevel: String,
-           val stream: OutputStream
+           val stream: OutputStream,
+           val csvstream: OutputStream
           ) extends Serializable with Ordered[User] {
 
   val userId = Counters.nextUserId
@@ -94,17 +95,19 @@ class User(val alpha: Double,
   def writeEvent() = {
     // use Jackson streaming to maximize efficiency
     // (earlier versions used Scala's std JSON generators, but they were slow)
+    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ")
+    val sdfSimple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     val showUserDetails = ConfigFromFile.showUserWithState(session.currentState.auth)
     writer.writeStartObject()
-    writer.writeNumberField("ts", session.nextEventTimeStamp.get.toInstant(ZoneOffset.UTC)toEpochMilli())
-    writer.writeStringField("userId", if (showUserDetails) userId.toString else "")
-    writer.writeNumberField("sessionId", session.sessionId)
-    writer.writeStringField("page", session.currentState.page)
-    writer.writeStringField("auth", session.currentState.auth)
-    writer.writeStringField("method", session.currentState.method)
-    writer.writeNumberField("status", session.currentState.status)
-    writer.writeStringField("level", session.currentState.level)
-    writer.writeNumberField("itemInSession", session.itemInSession)
+    writer.writeStringField("eventTime", sdf.format(new Date(session.nextEventTimeStamp.get.toInstant(ZoneOffset.UTC).toEpochMilli)))
+    writer.writeStringField("actors.CUSTOMER.CUSTOMER_ID", if (showUserDetails) userId.toString else "")
+    writer.writeNumberField("actors.CUSTOMER.SESSION_ID", session.sessionId)
+    writer.writeStringField("eventType", session.currentState.page)
+    writer.writeStringField("labels.AUTH", session.currentState.auth)
+    writer.writeStringField("labels.HTTP_METHOD", session.currentState.method)
+    writer.writeNumberField("labels.HTTP_STATUS", session.currentState.status)
+    writer.writeStringField("labels.USER_LEVEL", session.currentState.level)
+    writer.writeNumberField("labels.ITEM_IN_SESSION", session.itemInSession)
     if (showUserDetails) {
       props.foreach((p: (String, Any)) => {
         p._2 match {
@@ -113,9 +116,10 @@ class User(val alpha: Double,
           case _: Double => writer.writeNumberField(p._1, p._2.asInstanceOf[Double])
           case _: Float => writer.writeNumberField(p._1, p._2.asInstanceOf[Float])
           case _: String => writer.writeStringField(p._1, p._2.asInstanceOf[String])
+          case _: Date => writer.writeStringField(p._1, sdf.format(p._2).toString)
         }})
       if (Main.tag.isDefined)
-        writer.writeStringField("tag", Main.tag.get)
+        writer.writeStringField("actors.CUSTOMER.TAG", Main.tag.get)
     }
     if (session.currentState.page=="NextSong") {
       writer.writeStringField("artist", session.currentSong.get._2)
@@ -125,6 +129,43 @@ class User(val alpha: Double,
     writer.writeEndObject()
     writer.writeRaw('\n')
     writer.flush()
+    
+    var propArray:Array[String] = Array()
+    if (showUserDetails) {
+      props.foreach((p: (String, Any)) => {
+        var propItem:Any = None
+        p._2 match {
+          case _: Long => propItem = p._2.asInstanceOf[Long]
+          case _: Int => propItem = p._2.asInstanceOf[Int]
+          case _: Double => propItem = p._2.asInstanceOf[Double]
+          case _: Float => propItem = p._2.asInstanceOf[Float]
+          case _: String => propItem = p._2.asInstanceOf[String]
+          case _: Date => propItem = sdfSimple.format(p._2)
+        }
+        propArray = propArray :+ propItem.toString
+      })
+    }
+    val propString = propArray.mkString("\t")
+    val csvString:String = "%s\t%s\t%d\t%s\t%s\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n".format(
+        sdfSimple.format(new Date(session.nextEventTimeStamp.get.toInstant(ZoneOffset.UTC).toEpochMilli)),
+        session.currentState.page,
+        session.sessionId,
+        sdfSimple.format(new Date(this.lastEventTime.get.toInstant(ZoneOffset.UTC).toEpochMilli)),
+        session.previousState.page,
+        this.prevSessionId,
+        if (showUserDetails) userId.toString else "",
+        if (Main.tag.isDefined) Main.tag.get else "None",
+        session.currentState.auth,
+        session.currentState.method,
+        session.currentState.status,
+        session.currentState.level,
+        session.itemInSession,
+        propString
+    )
+    csvstream.write(csvString.getBytes)
+    
+    this.lastEventTime = session.nextEventTimeStamp
+    this.prevSessionId = session.sessionId
   }
 
   def tsToString(ts: LocalDateTime) = ts.toString()

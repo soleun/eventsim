@@ -20,6 +20,8 @@ class Session(var nextEventTimeStamp: Option[LocalDateTime],
   var itemInSession = 0
   var done = false
   var currentState:State = initialStates((auth, level)).randomThing
+  var previousState:State = initialStates((auth, level)).randomThing
+  val previousEventTimeStamp:Option[LocalDateTime] = nextEventTimeStamp
   var currentSong:Option[(String,String,String,Double)] =
     if (currentState.page=="NextSong") Some(RandomSongGenerator.nextSong()) else None
   var currentSongEnd:Option[LocalDateTime] =
@@ -29,10 +31,12 @@ class Session(var nextEventTimeStamp: Option[LocalDateTime],
     val nextStateObject = currentState.nextState(rng)
     if (nextStateObject == None) {
       done=true
-    } else {      
+    } else {
+      previousState = currentState
+      
       val nextState = Some(nextStateObject.get._1)
       val tt = Some(nextStateObject.get._2._3)
-        
+      
       nextState match {
         case x if 300 until 399 contains x.get.status =>
           nextEventTimeStamp=Some(nextEventTimeStamp.get.plusSeconds(1))
@@ -58,7 +62,8 @@ class Session(var nextEventTimeStamp: Option[LocalDateTime],
           nextEventTimeStamp=Some(nextEventTimeStamp.get.plusSeconds(exponentialRandomValue(alpha*tt.get).toInt))
           currentState = nextState.get
           itemInSession += 1
-      }
+  
+      } 
     }
   }
 

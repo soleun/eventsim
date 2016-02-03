@@ -1,6 +1,8 @@
 package com.interana.eventsim.buildin
 
 import java.time.{ZoneOffset, LocalDateTime}
+import java.text.SimpleDateFormat
+import java.util.Date
 
 import com.interana.eventsim.{Constants, Main, TimeUtilities}
 
@@ -18,12 +20,12 @@ object UserProperties {
     val location = RandomLocationGenerator.randomThing
 
     Map[String,Any](
-      "lastName" -> RandomLastNameGenerator.randomThing,
-      "firstName" -> firstNameAndGender._1,
-      "gender" -> firstNameAndGender._2,
-      "registration" -> registrationTime.toInstant(ZoneOffset.UTC).toEpochMilli,
-      "location" -> location,
-      "userAgent" -> RandomUserAgentGenerator.randomThing._1
+      "actors.CUSTOMER.LAST_NAME" -> RandomLastNameGenerator.randomThing,
+      "actors.CUSTOMER.FIRST_NAME" -> firstNameAndGender._1,
+      "actors.CUSTOMER.GENDER" -> firstNameAndGender._2,
+      "actors.CUSTOMER.REGISTRATION_TIME" -> new Date(registrationTime.toInstant(ZoneOffset.UTC).toEpochMilli),
+      "actors.CUSTOMER.LOCATION" -> location,
+      "actors.CUSTOMER.USER_AGENT" -> RandomUserAgentGenerator.randomThing._1
     )
   }
 

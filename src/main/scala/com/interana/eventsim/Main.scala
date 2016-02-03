@@ -63,6 +63,9 @@ object Main extends App {
       descrYes = "verbose output (not implemented yet)", descrNo = "silent mode")
     val outputFile: ScallopOption[String] = trailArg[String]("output-file", required = false, descr = "File name")
 
+    val outputCSVFile: ScallopOption[String] =
+      opt[String]("output-csv-file", descr = "output csv file", required = false)
+    
     val kafkaTopic: ScallopOption[String] =
       opt[String]("kafkaTopic", descr = "kafka topic", required = false)
 
@@ -134,6 +137,13 @@ object Main extends App {
     } else {
       System.out
     }
+    
+    val csvout = if (ConfFromOptions.outputCSVFile.isSupplied) {
+      new FileOutputStream(ConfFromOptions.outputCSVFile())
+    } else {
+      System.out
+    }
+    csvout.write("eventTime\teventType\tsessionId\tprevEventTime\tprevEventType\tprevSessionId\tuserId\ttag\tauth\tmethod\tstatus\tlevel\titemInSession\tlastName\tuserAgent\tgender\tregistration\tlocation\tfirstName\n".getBytes)
 
     (0 until nUsers).foreach((_) =>
       users += new User(
@@ -145,7 +155,8 @@ object Main extends App {
         UserProperties.randomProps,
         DeviceProperties.randomProps,
         ConfigFromFile.levelGenerator.randomThing,
-        out
+        out,
+        csvout
       ))
 
     val growthRate = ConfigFromFile.growthRate.getOrElse(ConfFromOptions.growthRate.get.get)
@@ -163,7 +174,8 @@ object Main extends App {
           UserProperties.randomNewProps(current),
           DeviceProperties.randomProps,
           ConfigFromFile.newUserLevel,
-          out
+          out,
+          csvout
         )
         nUsers += 1
       }
@@ -218,6 +230,8 @@ object Main extends App {
 
     out.flush()
     out.close()
+    csvout.flush()
+    csvout.close()
 
   }
 
