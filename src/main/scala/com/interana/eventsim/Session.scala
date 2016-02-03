@@ -26,35 +26,39 @@ class Session(var nextEventTimeStamp: Option[LocalDateTime],
     if (currentState.page=="NextSong") Some(nextEventTimeStamp.get.plusSeconds(currentSong.get._4.toInt)) else None
 
   def incrementEvent() = {
-    val nextState = currentState.nextState(rng)
-    nextState match {
-      case None =>
-        done=true
-      case x if 300 until 399 contains x.get.status =>
-        nextEventTimeStamp=Some(nextEventTimeStamp.get.plusSeconds(1))
-        currentState = nextState.get
-        itemInSession += 1
-
-      case x if x.get.page=="NextSong" =>
-        if (currentSong.isEmpty) {
-          nextEventTimeStamp=Some(nextEventTimeStamp.get.plusSeconds(exponentialRandomValue(alpha).toInt))
-          currentSong = Some(RandomSongGenerator.nextSong())
-        } else if (nextEventTimeStamp.get.isBefore(currentSongEnd.get)) {
-          nextEventTimeStamp = currentSongEnd
-          currentSong = Some(RandomSongGenerator.nextSong(currentSong.get._1))
-        } else {
-          nextEventTimeStamp=Some(nextEventTimeStamp.get.plusSeconds(exponentialRandomValue(alpha).toInt))
-          currentSong = Some(RandomSongGenerator.nextSong(currentSong.get._1))
-        }
-        currentSongEnd = Some(nextEventTimeStamp.get.plusSeconds(currentSong.get._4.toInt))
-        currentState = nextState.get
-        itemInSession += 1
-
-      case _ =>
-        nextEventTimeStamp=Some(nextEventTimeStamp.get.plusSeconds(exponentialRandomValue(alpha).toInt))
-        currentState = nextState.get
-        itemInSession += 1
-
+    val nextStateObject = currentState.nextState(rng)
+    if (nextStateObject == None) {
+      done=true
+    } else {      
+      val nextState = Some(nextStateObject.get._1)
+      val tt = Some(nextStateObject.get._2._3)
+        
+      nextState match {
+        case x if 300 until 399 contains x.get.status =>
+          nextEventTimeStamp=Some(nextEventTimeStamp.get.plusSeconds(1))
+          currentState = nextState.get
+          itemInSession += 1
+  
+        case x if x.get.page=="NextSong" =>
+          if (currentSong.isEmpty) {
+            nextEventTimeStamp=Some(nextEventTimeStamp.get.plusSeconds(exponentialRandomValue(alpha*tt.get).toInt))
+            currentSong = Some(RandomSongGenerator.nextSong())
+          } else if (nextEventTimeStamp.get.isBefore(currentSongEnd.get)) {
+            nextEventTimeStamp = currentSongEnd
+            currentSong = Some(RandomSongGenerator.nextSong(currentSong.get._1))
+          } else {
+            nextEventTimeStamp=Some(nextEventTimeStamp.get.plusSeconds(exponentialRandomValue(alpha*tt.get).toInt))
+            currentSong = Some(RandomSongGenerator.nextSong(currentSong.get._1))
+          }
+          currentSongEnd = Some(nextEventTimeStamp.get.plusSeconds(currentSong.get._4.toInt))
+          currentState = nextState.get
+          itemInSession += 1
+  
+        case _ =>
+          nextEventTimeStamp=Some(nextEventTimeStamp.get.plusSeconds(exponentialRandomValue(alpha*tt.get).toInt))
+          currentState = nextState.get
+          itemInSession += 1
+      }
     }
   }
 

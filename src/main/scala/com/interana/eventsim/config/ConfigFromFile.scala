@@ -52,6 +52,7 @@ object ConfigFromFile {
   val SOURCE = "source"
   val DEST = "dest"
   val P = "p"
+  val T = "t"
   val STATUS = "status"
   val METHOD = "method"
   val LEVEL = "level"
@@ -180,6 +181,7 @@ object ConfigFromFile {
       val source = readState(transition.getOrElse(SOURCE,List()).asInstanceOf[Map[String,Any]])
       val dest = readState(transition.getOrElse(DEST,List()).asInstanceOf[Map[String,Any]])
       val p      = transition.getOrElse(P,Unit).asInstanceOf[Double]
+      val tt     = transition.getOrElse(T,(1.0).toDouble).asInstanceOf[Double]
 
       if (!states.contains(source)) {
         states += (source ->
@@ -190,7 +192,7 @@ object ConfigFromFile {
           new State(dest))
       }
       states(source)
-        .addLateral(states(dest),p)
+        .addLateral(states(dest),p,tt)
     }
 
     val initial = jsonContents.getOrElse(NEW_SESSION,List()).asInstanceOf[List[Any]]

@@ -1,12 +1,15 @@
 package com.interana.eventsim
 
-import java.io.{OutputStream, Serializable}
+import java.io.{OutputStream, Serializable, FileWriter}
 import java.time.{ZoneOffset, LocalDateTime}
+import java.text.SimpleDateFormat
+import java.util.Date
 
 import com.fasterxml.jackson.core.{JsonEncoding, JsonFactory}
 import com.interana.eventsim.config.ConfigFromFile
 
 import scala.util.parsing.json.JSONObject
+import scala.io.Source
 
 class User(val alpha: Double,
            val beta: Double,
@@ -23,6 +26,9 @@ class User(val alpha: Double,
   var session = new Session(
     Some(Session.pickFirstTimeStamp(startTime, alpha, beta)),
       alpha, beta, initialSessionStates, auth, initialLevel)
+  
+  var lastEventTime = this.session.nextEventTimeStamp
+  var prevSessionId = this.session.sessionId
 
   override def compare(that: User) =
     (that.session.nextEventTimeStamp, this.session.nextEventTimeStamp) match {
@@ -53,8 +59,9 @@ class User(val alpha: Double,
 
   def eventString = {
     val showUserDetails = ConfigFromFile.showUserWithState(session.currentState.auth)
+    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ")
     var m = device.+(
-      "ts" -> session.nextEventTimeStamp.get.toInstant(ZoneOffset.UTC).toEpochMilli,
+      "ts" -> sdf.format(new Date(session.nextEventTimeStamp.get.toInstant(ZoneOffset.UTC).toEpochMilli)),
       "userId" -> (if (showUserDetails) userId else ""),
       "sessionId" -> session.sessionId,
       "page" -> session.currentState.page,
