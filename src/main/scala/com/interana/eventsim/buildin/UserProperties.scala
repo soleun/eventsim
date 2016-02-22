@@ -4,7 +4,9 @@ import java.time.{ZoneOffset, LocalDateTime}
 import java.text.SimpleDateFormat
 import java.util.Date
 
-import com.interana.eventsim.{Constants, Main, TimeUtilities}
+import scala.collection.mutable
+import com.interana.eventsim.{Constants, Main, TimeUtilities,WeightedRandomThingGenerator}
+import com.pointillist.util.GaussianRandomNumberGenerator
 
 object UserProperties {
   // utilities for generating random properties for users
@@ -22,11 +24,24 @@ object UserProperties {
     Map[String,Any](
       "actors.CUSTOMER.LAST_NAME" -> RandomLastNameGenerator.randomThing,
       "actors.CUSTOMER.FIRST_NAME" -> firstNameAndGender._1,
-      "actors.CUSTOMER.GENDER" -> firstNameAndGender._2,
-      "actors.CUSTOMER.REGISTRATION_TIME" -> new Date(registrationTime.toInstant(ZoneOffset.UTC).toEpochMilli),
-      "actors.CUSTOMER.LOCATION" -> location,
-      "actors.CUSTOMER.USER_AGENT" -> RandomUserAgentGenerator.randomThing._1
+      "numbers.REGISTRATION_TIME" -> new Date(registrationTime.toInstant(ZoneOffset.UTC).toEpochMilli),
+      "location.LOCATION" -> location,
+      "labels.USER_AGENT" -> RandomUserAgentGenerator.randomThing._1
     )
+  }
+  
+  def customProps(m: mutable.HashMap[String,Any]) = {
+    var props = randomProps
+    for ((k,v) <- m) {
+      v match {
+        case _: WeightedRandomThingGenerator[String] => 
+          props = props + ("actors.CUSTOMER."+k.toUpperCase() -> v.asInstanceOf[WeightedRandomThingGenerator[String]].randomThing)
+        case _: GaussianRandomNumberGenerator =>
+          props = props + ("actors.CUSTOMER."+k.toUpperCase() -> v.asInstanceOf[GaussianRandomNumberGenerator].getRandomNumber)
+      }
+    }
+    
+    props
   }
 
   def randomNewProps(dt: LocalDateTime) =

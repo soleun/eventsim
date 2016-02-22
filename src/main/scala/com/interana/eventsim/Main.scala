@@ -65,6 +65,9 @@ object Main extends App {
 
     val outputCSVFile: ScallopOption[String] =
       opt[String]("output-csv-file", descr = "output csv file", required = false)
+      
+    val outputIMFile: ScallopOption[String] =
+      opt[String]("output-im-file", descr = "output in-memory compatible JSON file", required = false)
     
     val kafkaTopic: ScallopOption[String] =
       opt[String]("kafkaTopic", descr = "kafka topic", required = false)
@@ -143,20 +146,27 @@ object Main extends App {
     } else {
       System.out
     }
-    csvout.write("eventTime\teventType\tsessionId\tprevEventTime\tprevEventType\tprevSessionId\tuserId\ttag\tauth\tmethod\tstatus\tlevel\titemInSession\tlastName\tuserAgent\tgender\tregistration\tlocation\tfirstName\n".getBytes)
-
-    (0 until nUsers).foreach((_) =>
+    csvout.write("eventTime\teventType\tsessionId\tprevEventTime\tprevEventType\tprevSessionId\tuserId\ttag\tauth\tmethod\tstatus\tlevel\titemInSession\tlastName\tlocation\trace\tregistration\tgender\tinterest\tperceived quality\tcar\tfirstName\tmarital status\twillingness to recommend\tactivity\trelative perceived quality\teducation\tattitude\tuserAgent\tage\tnps\temployment\tperceived value\tintentions\tpurchase intentions\tsatisfaction\tincome\n".getBytes)
+    
+    val imout = if (ConfFromOptions.outputIMFile.isSupplied) {
+      new FileOutputStream(ConfFromOptions.outputIMFile())
+    } else {
+      System.out
+    }
+    
+    (0 until nUsers).foreach((_) =>      
       users += new User(
         ConfigFromFile.alpha * logNormalRandomValue,
         ConfigFromFile.beta * logNormalRandomValue,
         startTime,
         ConfigFromFile.initialStates,
         ConfigFromFile.authGenerator.randomThing,
-        UserProperties.randomProps,
+        UserProperties.customProps(ConfigFromFile.attributeSetGenerator),
         DeviceProperties.randomProps,
         ConfigFromFile.levelGenerator.randomThing,
         out,
-        csvout
+        csvout,
+        imout
       ))
 
     val growthRate = ConfigFromFile.growthRate.getOrElse(ConfFromOptions.growthRate.get.get)
@@ -171,11 +181,12 @@ object Main extends App {
           current,
           ConfigFromFile.initialStates,
           ConfigFromFile.newUserAuth,
-          UserProperties.randomNewProps(current),
+          UserProperties.customProps(ConfigFromFile.attributeSetGenerator),
           DeviceProperties.randomProps,
           ConfigFromFile.newUserLevel,
           out,
-          csvout
+          csvout,
+          imout
         )
         nUsers += 1
       }
@@ -232,6 +243,8 @@ object Main extends App {
     out.close()
     csvout.flush()
     csvout.close()
+    imout.flush()
+    imout.close()
 
   }
 

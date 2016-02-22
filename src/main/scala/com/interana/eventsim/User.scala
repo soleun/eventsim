@@ -8,6 +8,7 @@ import java.util.Date
 import com.fasterxml.jackson.core.{JsonEncoding, JsonFactory}
 import com.interana.eventsim.config.ConfigFromFile
 
+import scala.collection.mutable
 import scala.util.parsing.json.JSONObject
 import scala.io.Source
 
@@ -20,7 +21,8 @@ class User(val alpha: Double,
            var device: scala.collection.immutable.Map[String,Any],
            val initialLevel: String,
            val stream: OutputStream,
-           val csvstream: OutputStream
+           val csvstream: OutputStream,
+           val imstream: OutputStream
           ) extends Serializable with Ordered[User] {
 
   val userId = Counters.nextUserId
@@ -91,6 +93,7 @@ class User(val alpha: Double,
 
 
   val writer = User.jsonFactory.createGenerator(stream, JsonEncoding.UTF8)
+  val imwriter = User.jsonFactory.createGenerator(imstream, JsonEncoding.UTF8)
 
   def writeEvent() = {
     // use Jackson streaming to maximize efficiency
@@ -163,6 +166,57 @@ class User(val alpha: Double,
         propString
     )
     csvstream.write(csvString.getBytes)
+    
+    
+    // Writing IM File
+    imwriter.writeStartObject()
+    imwriter.writeStringField("event type", session.currentState.page)
+    imwriter.writeStringField("event time", sdf.format(new Date(session.nextEventTimeStamp.get.toInstant(ZoneOffset.UTC).toEpochMilli)))
+    imwriter.writeObjectFieldStart("actors")
+    imwriter.writeStringField("customer", if (showUserDetails) userId.toString else "")
+    imwriter.writeNumberField("session", session.sessionId)
+    imwriter.writeEndObject()
+    
+    imwriter.writeObjectFieldStart("labels")
+    if (showUserDetails) {
+      props.foreach((p: (String, Any)) => {
+        val key = p._1.split("""\.""").last.toLowerCase()
+        p._2 match {
+          case _: String => imwriter.writeStringField(key, p._2.asInstanceOf[String])
+          case _: Date => imwriter.writeStringField(key, sdf.format(p._2).toString)
+          case _ => 
+        }})
+      if (Main.tag.isDefined)
+        imwriter.writeStringField("tag", Main.tag.get)
+    }
+    imwriter.writeStringField("auth", session.currentState.auth)
+    imwriter.writeStringField("http_method", session.currentState.method)
+    imwriter.writeStringField("http_status", session.currentState.status.toString)
+    imwriter.writeStringField("user_level", session.currentState.level)
+    imwriter.writeEndObject()
+    
+    imwriter.writeObjectFieldStart("values")
+    imwriter.writeNumberField("item_in_session", session.itemInSession)
+    if (showUserDetails) {
+      props.foreach((p: (String, Any)) => {
+        val key = p._1.split("""\.""").last.toLowerCase()
+        p._2 match {
+          case _: Long => imwriter.writeNumberField(key, p._2.asInstanceOf[Long])
+          case _: Int => imwriter.writeNumberField(key, p._2.asInstanceOf[Int])
+          case _: Double => imwriter.writeNumberField(key, p._2.asInstanceOf[Double])
+          case _: Float => imwriter.writeNumberField(key, p._2.asInstanceOf[Float])
+          case _ =>
+        }})
+      if (Main.tag.isDefined)
+        imwriter.writeStringField("tag", Main.tag.get)
+    }
+    imwriter.writeEndObject()
+    
+    imwriter.writeEndObject()
+    imwriter.writeRaw('\n')
+    imwriter.flush()
+    
+    
     
     this.lastEventTime = session.nextEventTimeStamp
     this.prevSessionId = session.sessionId

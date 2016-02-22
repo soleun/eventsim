@@ -1,6 +1,7 @@
 package com.interana.eventsim.config
 
 import com.interana.eventsim.{Constants, State, WeightedRandomThingGenerator}
+import com.pointillist.util.GaussianRandomNumberGenerator
 
 import scala.collection.mutable
 import scala.io.Source
@@ -17,6 +18,7 @@ object ConfigFromFile {
   val showUserWithState = new mutable.HashMap[String, Boolean]()
   val levelGenerator = new WeightedRandomThingGenerator[String]()
   val authGenerator = new WeightedRandomThingGenerator[String]()
+  val attributeSetGenerator = new mutable.HashMap[String, Any]()
 
   // optional config values
   var alpha:Double = 60.0
@@ -75,6 +77,8 @@ object ConfigFromFile {
   val FIRST_USER_ID = "first-user-id"
   val GROWTH_RATE = "growth-rate"
   val TAG = "tag"
+  
+  val ATTRIBUTE_SETS = "attribute-sets"
 
   def configFileLoader(fn: String) = {
 
@@ -234,7 +238,33 @@ object ConfigFromFile {
       val levelWeight = item.getOrElse(WEIGHT,0.0).asInstanceOf[Double].toInt
       authGenerator.add(levelName,levelWeight)
     }
-
+    
+    val attribute_sets = jsonContents.getOrElse(ATTRIBUTE_SETS,List()).asInstanceOf[List[Any]]
+    for (attribute_set <- attribute_sets) {
+      val item = attribute_set.asInstanceOf[Map[String,Any]]
+      val setName = item.getOrElse("name","").asInstanceOf[String]
+      val setType = item.getOrElse("type","").asInstanceOf[String]
+      setType match {
+        case "categorical" => 
+          val weightedRandomGenerator = new WeightedRandomThingGenerator[String]()
+          val values = item.get("values").get.asInstanceOf[Map[String,Any]]
+          
+          for ((k,v) <- values) {
+            if (v.asInstanceOf[Double].toInt > 0)
+              weightedRandomGenerator.add(k.asInstanceOf[String], v.asInstanceOf[Double].toInt)
+          }
+          attributeSetGenerator += (setName -> weightedRandomGenerator)
+        case "numerical" =>
+          val expected = item.getOrElse("expected","").asInstanceOf[Double]
+          val min = item.getOrElse("min","").asInstanceOf[Double]
+          val max = item.getOrElse("max","").asInstanceOf[Double]
+          val sd = item.getOrElse("sd","").asInstanceOf[Double]
+          
+          val gaussianRandomNumberGenerator = new GaussianRandomNumberGenerator(expected, min, max, sd)
+          
+          attributeSetGenerator += (setName -> gaussianRandomNumberGenerator)
+      }
+    }
   }
 
   def readState(m: Map[String,Any]) =
