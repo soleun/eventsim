@@ -93,8 +93,8 @@ You also specify the event state machine. Each state includes a page, an HTTP st
 authentication status. Status should be used to describe a user's status: unregistered, logged in, logged out,
 cancelled, etc. Pages are used to describe a user's page. Here is how you specify the state machine:
 
-* Transitions. Describe the pair of page and status before and after each transition, and the
-probability of the transition.
+* Transitions. Describe the pair of page and status before and after each transition, the
+probability of the transition and the expected value for time between two events(added).
 * New user. Describes the page and status for each new user (and probability of arriving for the
 first time with one of those states).
 * New session. Describes that page and status for each new session.
@@ -143,6 +143,7 @@ The program can accept a number of command line options:
         -t, --to  <arg>                to y days ago (default = 1)
         -u, --userid  <arg>            first user id (default = 1)
             --help                     Show help message
+        --output-csv-file               File name for csv output
 
        trailing arguments:
         output-file (not required)   File name
@@ -275,3 +276,8 @@ To build the executable, run
     $ sbt assembly
     $ # make sure the script is executable
     $ chmod +x bin/eventsim
+
+Changes
+========
+
+(02/05/16) Added --output-csv-file flag and an ability to specify expected time on transitions.
