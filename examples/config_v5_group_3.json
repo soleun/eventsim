@@ -1,0 +1,2565 @@
+{
+  "weekend-damping-offset": 180,
+  "churned-state": "Cancelled",
+  "new-user-auth": "Guest",
+  "auths": [
+    {
+      "weight": 10,
+      "auth": "Guest"
+    }
+  ],
+  "attribute-sets": [
+    {
+      "type": "categorical",
+      "name": "gender",
+      "values": {
+        "Male": 51,
+        "Female": 49
+      }
+    },
+    {
+      "type": "categorical",
+      "name": "race",
+      "values": {
+        "White": 28,
+        "Black": 37,
+        "Hispanic": 24,
+        "Asian": 10,
+        "Native American": 1
+      }
+    },
+    {
+      "type": "categorical",
+      "name": "income",
+      "values": {
+        "under $5,000": 0,
+        "$5,000 - $9,999": 0,
+        "$10,000 - $19,999": 0,
+        "$20,000 - $29,999": 2,
+        "$30,000 - $39,999": 0,
+        "$40,000 - $49,999": 3,
+        "$50,000 - $59,999": 0,
+        "$60,000 - $69,999": 5,
+        "$70,000 - $79,999": 0,
+        "$80,000 - $89,999": 12,
+        "$90,000 - $99,999": 0,
+        "$110,000 - $119,999": 15,
+        "$120,000 - $129,999": 0,
+        "$130,000 - $139,999": 25,
+        "$140,000 - $149,999": 15,
+        "$150,000 - $159,999": 10,
+        "$160,000 - $169,999": 8,
+        "$170,000 - $179,999": 5,
+        "$180,000 - $189,999": 0,
+        "$190,000 - $199,999": 0,
+        "$200,000 - $249,999": 0,
+        "$250,000 and over": 0
+      }
+    },
+    {
+      "type": "categorical",
+      "name": "age",
+      "values": {
+        "0-4": 0,
+        "5-12": 0,
+        "13-17": 0,
+        "18-24": 2,
+        "25-34": 4,
+        "35-44": 13,
+        "45-54": 42,
+        "55-64": 24,
+        "65-75": 12,
+        "+75": 3
+      }
+    },
+    {
+      "type": "categorical",
+      "name": "education",
+      "values": {
+        "Not a high school graduate": 3,
+        "High school graduate": 5,
+        "Some college": 22,
+        "Bachelor degree": 36,
+        "Advanced degree": 24
+      }
+    },
+    {
+      "type": "categorical",
+      "name": "employment",
+      "values": {
+        "worker": 15,
+        "employed": 45,
+        "self-employed": 10,
+        "retired": 7,
+        "umemployed": 12,
+        "volunteer": 1
+      }
+    },
+    {
+      "type": "categorical",
+      "name": "marital status",
+      "values": {
+        "married": 38,
+        "never married": 12,
+        "divorced": 38,
+        "widowed": 2
+      }
+    },
+    {
+      "type": "categorical",
+      "name": "car",
+      "values": {
+        "subcompact": 2,
+        "compact": 5,
+        "mid-size": 10,
+        "full-size": 31,
+        "electric": 5,
+        "SUV & minivan": 20,
+        "compact luxury": 20,
+        "mid-size luxury": 5,
+        "full-size luxury": 2
+      }
+    },
+    {
+      "type": "categorical",
+      "name": "interest",
+      "values": {
+        "electronics & gadget": 14,
+        "organic food": 6,
+        "fashion": 8,
+        "education": 6,
+        "politics": 3,
+        "travels": 15,
+        "news": 9,
+        "business": 9,
+        "sports": 12,
+        "music": 18
+      }
+    },
+    {
+      "type": "categorical",
+      "name": "activity",
+      "values": {
+        "art & culture": 10,
+        "sports & fitness": 20,
+        "parks & outdoors": 25,
+        "photography": 12,
+        "music": 33
+      }
+    },
+    {
+      "type": "numerical",
+      "name": "satisfaction",
+      "expected": 2,
+      "min": 1,
+      "max": 5,
+      "sd": 2
+    },
+    {
+      "type": "numerical",
+      "name": "NPS",
+      "expected": 5,
+      "min": 1,
+      "max": 10,
+      "sd": 3
+    },
+    {
+      "type": "numerical",
+      "name": "willingness to recommend",
+      "expected": 2,
+      "min": 1,
+      "max": 5,
+      "sd": 3
+    },
+    {
+      "type": "numerical",
+      "name": "attitude",
+      "expected": 1,
+      "min": 1,
+      "max": 5,
+      "sd": 3
+    },
+    {
+      "type": "numerical",
+      "name": "perceived value",
+      "expected": 2,
+      "min": 1,
+      "max": 5,
+      "sd": 3
+    },
+    {
+      "type": "numerical",
+      "name": "perceived quality",
+      "expected": 2,
+      "min": 1,
+      "max": 5,
+      "sd": 1
+    },
+    {
+      "type": "numerical",
+      "name": "relative perceived quality",
+      "expected": 2,
+      "min": 1,
+      "max": 5,
+      "sd": 1
+    },
+    {
+      "type": "numerical",
+      "name": "intentions",
+      "expected": 3,
+      "min": 1,
+      "max": 5,
+      "sd": 3
+    },
+    {
+      "type": "numerical",
+      "name": "purchase intentions",
+      "expected": 2,
+      "min": 1,
+      "max": 5,
+      "sd": 1
+    }
+  ],
+  "weekend-damping": 0.53,
+  "downgrades": [],
+  "session-gap": 1800,
+  "new-session": [
+    {
+      "status": 200,
+      "weight": 3,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Coupon Sent",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 3,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Promotion Sent",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 8,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Advertising Presented",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 10,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Product Searched",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 5,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Email Sent - Surveys",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 2,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Loyalty Card Registration",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 2,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Loyalty Card Presented",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 3,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Reward Sent",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 12,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Page Viewed - Home Page",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 10,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Web Searched",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 5,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Return in Store",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 6,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Application Registration",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 6,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Application Session Started",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 2,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Application Detection",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 8,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Received Service Request",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 5,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Email Sent - Receipt",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 5,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Email Sent - Service Request Confirmation",
+      "method": "GET"
+    },
+    {
+      "status": 200,
+      "weight": 5,
+      "level": "prospect",
+      "auth": "Guest",
+      "page": "Email Sent - Cart Abandoned",
+      "method": "GET"
+    }
+  ],
+  "levels": [
+    {
+      "weight": 10,
+      "level": "prospect"
+    }
+  ],
+  "beta": 518400.0,
+  "seed": 1,
+  "damping": 0.09425,
+  "weekend-damping-scale": 360,
+  "upgrades": [],
+  "alpha": 3600.0,
+  "transitions": [
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Cart Abandoned",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Add To Cart",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 24.0,
+      "p": 0.1
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Checkout",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Add To Cart",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.5,
+      "p": 0.3
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Sent - Surveys",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Add To Cart",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 24.0,
+      "p": 0.09
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Error Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Add To Cart",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.01
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Landing Page Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Advertising Clicked",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 1.0
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Advertising Clicked",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Advertising Presented",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.03
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Application Session Started",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Application Detection",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.25
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Bar Code Scanned",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Application Detection",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.35
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Application Session Started",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Application Login",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 1.0
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Application Login",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Application Registration",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.2
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Application Session Started",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Application Registration",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.8
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Application Detection",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Application Session Started",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 1.0,
+      "p": 0.1
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Bar Code Scanned",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Application Session Started",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.2
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Application Session Started",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.4
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Resolved Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Assigned Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 72.0,
+      "p": 0.2
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Updated Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Assigned Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 48.0,
+      "p": 0.6
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Searched",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Bar Code Scanned",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.9
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Advertising Presented",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Cart Abandoned",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 1.0,
+      "p": 0.6
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Sent - Cart Abandoned",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Cart Abandoned",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.3
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Sent - Receipt",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Checkout",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 24.0,
+      "p": 0.6
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Sent - Surveys",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Checkout",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 24.0,
+      "p": 0.2
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Error Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Checkout",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.01
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Received Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Checkout",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 72.0,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Return in Store",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Checkout",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 240.0,
+      "p": 0.1
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Add To Cart",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Coupon Accepted",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 24.0,
+      "p": 0.1
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Coupon Redeemed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Coupon Accepted",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 24.0,
+      "p": 0.75
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Checkout",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Coupon Redeemed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 1.0
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Coupon Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Coupon Sent",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 24.0,
+      "p": 0.15
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Coupon Accepted",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Coupon Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 1.0,
+      "p": 0.3
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Assigned Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Created Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 1.0,
+      "p": 0.4
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Resolved Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Created Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 72.0,
+      "p": 0.2
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Updated Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Created Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 48.0,
+      "p": 0.1
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Set Customer Profile",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Customer Registration",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.25
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Landing Page Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Clicked",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.6
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Clicked",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.1
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Clicked",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.3
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Marketing Registration",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.8
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Clicked",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Opened",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Bounced",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Sent - Cart Abandoned",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Opened",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Sent - Cart Abandoned",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 5.0,
+      "p": 0.03
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Bounced",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Sent - Receipt",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Opened",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Sent - Receipt",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 1.0,
+      "p": 0.2
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Bounced",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Sent - Service Request Confirmation",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Opened",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Sent - Service Request Confirmation",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 120.0,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Consumer Beliefs Captured",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Sent - Surveys",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 120.0,
+      "p": 0.005
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Consumer Satisfaction Captured",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Sent - Surveys",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 120.0,
+      "p": 0.045
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Bounced",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Sent - Surveys",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "NPS Survey Captured",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Sent - Surveys",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 120.0,
+      "p": 0.015
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Willingness to Recommend Captured",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Sent - Surveys",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 120.0,
+      "p": 0.02
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Checkout",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Landing Page Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.01
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Marketing Registration",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Landing Page Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.033,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Marketing Content Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Landing Page Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.15
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Marketing Event Registration",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Landing Page Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.033,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Landing Page Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Landing Page Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.15
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Checkout",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Loyalty Card Presented",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.7
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Reward Redeemed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Loyalty Card Presented",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.25
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Loyalty Card Presented",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Loyalty Card Registration",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 120.0,
+      "p": 0.5
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Reward Sent",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Loyalty Card Registration",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 1.0,
+      "p": 0.5
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Marketing Content Downloaded",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Marketing Content Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.03
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Marketing Video Played",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Marketing Content Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.1
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Marketing Content Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.2
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Marketing Content Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.3
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Marketing Event Registration",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.7
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Marketing Event Registration",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.2
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Checkout",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.08,
+      "p": 0.01
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Customer Registration",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.09
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Marketing Registration",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.03,
+      "p": 0.01
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Facebook Page Liked",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.016,
+      "p": 0.01
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Marketing Content Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0005,
+      "p": 0.01
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Marketing Event Registration",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.03,
+      "p": 0.01
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Searched",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0013,
+      "p": 0.3
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0005,
+      "p": 0.25
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Set Customer Profile",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.167,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Twitter Followed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.016,
+      "p": 0.01
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Web Login",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.033,
+      "p": 0.15
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Add To Cart",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Compared",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Add To Cart",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Rated",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Add To Cart",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Recommended",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Add To Cart",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Reviewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.2
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Add To Cart",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Searched",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.02
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Searched",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.35
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Add To Cart",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Shared",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.3
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Facebook Post Shared",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Shared",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.01
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Add To Cart",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.2
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Facebook Post",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.02
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Facebook Post Commented",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.005
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Facebook Post Liked",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.005
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Facebook Post Shared",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.005
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Instagram Post",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.01
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Instagram Post Liked",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.01
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Marketing Content Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.2
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Compared",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Rated",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.01
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Recommended",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.15
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Reviewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.01
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Shared",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Twitter Favorited",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.02
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Twitter Tweeted",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.02
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Add To Cart",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Promotion Applied",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.1
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Promotion Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Promotion Sent",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 24.0,
+      "p": 0.03
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Promotion Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.1
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Promotion Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.15
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Promotion Applied",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Promotion Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 1.0,
+      "p": 0.4
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Created Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Received Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.9
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Customer Registration",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Resolved Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.167,
+      "p": 0.1
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Email Sent - Service Request Confirmation",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Resolved Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 1.0,
+      "p": 0.8
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Set Customer Profile",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Resolved Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.167,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Received Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Return in Store",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0167,
+      "p": 0.9
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Checkout",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Reward Redeemed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.00055,
+      "p": 0.9
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Loyalty Card Presented",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Reward Sent",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 120.0,
+      "p": 0.6
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Twitter Retweeted",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Twitter Tweeted",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.083,
+      "p": 0.03
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Customer Registration",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Updated Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 48.0,
+      "p": 0.1
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Resolved Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Updated Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 72.0,
+      "p": 0.6
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Set Customer Profile",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Updated Service Request",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 48.0,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Web Login",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.08,
+      "p": 0.99
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Landing Page Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Web Searched",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0005,
+      "p": 0.18
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Page Viewed - Home Page",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Web Searched",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0005,
+      "p": 0.1
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Searched",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Web Searched",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0005,
+      "p": 0.05
+    },
+    {
+      "dest": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Product Viewed",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "source": {
+        "status": 200,
+        "level": "prospect",
+        "page": "Web Searched",
+        "auth": "Guest",
+        "method": "GET"
+      },
+      "t": 0.0005,
+      "p": 0.15
+    }
+  ],
+  "new-user-level": "prospect",
+  "show-user-details": [
+    {
+      "auth": "Guest",
+      "show": true
+    },
+    {
+      "auth": "Logged In",
+      "show": true
+    },
+    {
+      "auth": "Logged Out",
+      "show": false
+    },
+    {
+      "auth": "Cancelled",
+      "show": true
+    }
+  ]
+}
