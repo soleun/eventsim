@@ -203,14 +203,16 @@ object ConfigFromFile {
     for (i <- initial) {
       val item = i.asInstanceOf[Map[String,Any]]
       val weight = item.get(WEIGHT).get.asInstanceOf[Double].toInt
-      val stateTuple = readState(item)
-      val (_,auth,_,_,level) = stateTuple
-      if (!initialStates.contains((auth,level)))
-        initialStates.put((auth,level), new WeightedRandomThingGenerator[State]())
-      if (!states.contains(stateTuple))
-        throw new Exception("Unkown state found while processing initial states: " + stateTuple.toString())
-
-      initialStates(auth,level).add(states.get(stateTuple).get, weight)
+      if (weight > 0) {
+        val stateTuple = readState(item)
+        val (_,auth,_,_,level) = stateTuple
+        if (!initialStates.contains((auth,level)))
+          initialStates.put((auth,level), new WeightedRandomThingGenerator[State]())
+        if (!states.contains(stateTuple))
+          throw new Exception("Unkown state found while processing initial states: " + stateTuple.toString())
+  
+        initialStates(auth,level).add(states.get(stateTuple).get, weight)
+      }
     }
 
     // TODO: put in check for initial state probabilities
