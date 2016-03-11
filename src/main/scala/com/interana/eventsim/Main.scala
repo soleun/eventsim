@@ -12,6 +12,7 @@ import kafka.producer.{Producer, ProducerConfig}
 import org.rogach.scallop.{ScallopOption, ScallopConf}
 
 import scala.collection.mutable
+import scala.io.Source
 
 object Main extends App {
   private val sqrtE = Math.exp(0.5)
@@ -83,7 +84,6 @@ object Main extends App {
 
     val realTime = toggle("continuous", default = Some(false),
       descrYes = "continuous output", descrNo = "run all at once")
-
   }
 
   val startTime = if (ConfFromOptions.startTimeArg.isSupplied) {
@@ -146,7 +146,11 @@ object Main extends App {
     } else {
       System.out
     }
-    csvout.write("eventTime\teventType\tsessionId\tprevEventTime\tprevEventType\tprevSessionId\tuserId\ttag\tauth\tmethod\tstatus\tlevel\titemInSession\tlastName\tlocation\trace\tregistration\tgender\tinterest\tperceived quality\tcar\tfirstName\tmarital status\twillingness to recommend\tactivity\trelative perceived quality\teducation\tattitude\tuserAgent\tage\tnps\temployment\tperceived value\tintentions\tpurchase intentions\tsatisfaction\tincome\n".getBytes)
+    
+    var header:String = "eventTime\teventType\tsessionId\tprevEventTime\tprevEventType\tprevSessionId\tuserId\ttag\tauth\tmethod\tstatus\tlevel\titemInSession\tlastName\tlocation\trace\tregistration\tgender\tinterest\tperceived quality\tcar\tfirstName\tmarital status\twillingness to recommend\tactivity\trelative perceived quality\teducation\tattitude\tuserAgent\tage\tnps\temployment\tperceived value\tintentions\tpurchase intentions\tsatisfaction\tincome"
+    //(asin, description, title, price, imUrl, related, brand, categories, salesRank)
+    var productHeader:String = "product_asin\tproduct_description\tproduct_title\tproduct_price\tproduct_imurl\tproduct_brand\tproduct_categories_1\tproduct_categories_2\tproduct_categories_3\tproduct_categories_4\tproduct_categories_5\tproduct_categories_6\tproduct_salesranks_1\tproduct_salesranks_2\tproduct_salesranks_3\tproduct_salesranks_4\tproduct_salesranks_5\tproduct_salesranks_6"
+    csvout.write(header.concat("\t").concat(productHeader).concat("\n").getBytes)
     
     val imout = if (ConfFromOptions.outputIMFile.isSupplied) {
       new FileOutputStream(ConfFromOptions.outputIMFile())

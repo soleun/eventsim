@@ -35,9 +35,9 @@ object UserProperties {
     for ((k,v) <- m) {
       v match {
         case _: WeightedRandomThingGenerator[String] => 
-          props = props + ("actors.CUSTOMER."+k.toUpperCase() -> v.asInstanceOf[WeightedRandomThingGenerator[String]].randomThing)
+          props = props + ("labels."+k.toUpperCase() -> v.asInstanceOf[WeightedRandomThingGenerator[String]].randomThing)
         case _: GaussianRandomNumberGenerator =>
-          props = props + ("actors.CUSTOMER."+k.toUpperCase() -> v.asInstanceOf[GaussianRandomNumberGenerator].getRandomNumber)
+          props = props + ("numbers."+k.toUpperCase() -> v.asInstanceOf[GaussianRandomNumberGenerator].getRandomNumber)
       }
     }
     

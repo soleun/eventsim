@@ -8,7 +8,7 @@ import java.util.Date
 import com.fasterxml.jackson.core.{JsonEncoding, JsonFactory}
 import com.interana.eventsim.config.ConfigFromFile
 
-import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
 import scala.util.parsing.json.JSONObject
 import scala.io.Source
 
@@ -29,6 +29,10 @@ class User(val alpha: Double,
   var session = new Session(
     Some(Session.pickFirstTimeStamp(startTime, alpha, beta)),
       alpha, beta, initialSessionStates, auth, initialLevel)
+  
+  var currentCartValue = 0.0;
+  var currentItemsInCart = 0;
+  val eventsWithProductData:List[String] = List("Product Searched", "Return in Store", "Add To Cart", "Bar Code Scanned", "Checkout", "Product Compared", "Product Rated", "Product Recommended", "Product Reviewed", "Product Shared", "Product Viewed") 
   
   var lastEventTime = this.session.nextEventTimeStamp
   var prevSessionId = this.session.sessionId
@@ -101,6 +105,10 @@ class User(val alpha: Double,
     val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ")
     val sdfSimple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     val showUserDetails = ConfigFromFile.showUserWithState(session.currentState.auth)
+    
+    var included_categories:ArrayBuffer[String] = ArrayBuffer[String]()
+    var included_salesranks:ArrayBuffer[Integer] = ArrayBuffer[Integer]()
+    
     writer.writeStartObject()
     writer.writeStringField("eventTime", sdf.format(new Date(session.nextEventTimeStamp.get.toInstant(ZoneOffset.UTC).toEpochMilli)))
     writer.writeStringField("actors.CUSTOMER.CUSTOMER_ID", if (showUserDetails) userId.toString else "")
@@ -123,6 +131,55 @@ class User(val alpha: Double,
         }})
       if (Main.tag.isDefined)
         writer.writeStringField("actors.CUSTOMER.TAG", Main.tag.get)
+    }
+    if (eventsWithProductData.contains(session.currentState.page)) {
+      val product = session.currentProduct.get
+      
+      //(asin, description, title, price, imUrl, related, salesRank, brand, categories)
+      writer.writeStringField("labels.PRODUCT_ASIN", product._1.get.asInstanceOf[String])
+      if (product._2 != None) {
+        writer.writeStringField("labels.PRODUCT_DESCRIPTION", product._2.get.asInstanceOf[String])
+      }
+      if (product._3 != None) {
+        writer.writeStringField("labels.PRODUCT_TITLE", product._3.get.asInstanceOf[String])
+      }
+      if (product._4 != None) {
+        val price = product._4.get.asInstanceOf[Double]
+        
+        writer.writeNumberField("labels.PRODUCT_PRICE", price)
+      }
+      if (product._5 != None) {
+        writer.writeStringField("labels.PRODUCT_IMURL", product._5.get.asInstanceOf[String])
+      }
+      if (product._6 != None) {
+        val related = product._6.get.asInstanceOf[Map[String,List[String]]]
+        
+        for ((k,v) <- related) {
+          writer.writeStringField("labels.PRODUCT_RELATED_"+k, v.mkString(","))
+        }
+      }
+      if (product._8 != None) {
+        writer.writeStringField("labels.PRODUCT_BRAND", product._8.get.asInstanceOf[String])
+      }
+      if (product._9 != None) {
+        val categories = product._9.get.asInstanceOf[List[List[String]]]
+        val first_categories = categories(0)
+        
+        for(c <- 1 until first_categories.length+1) {
+          included_categories += first_categories(c-1)
+          writer.writeStringField("labels.PRODUCT_CATEGORIES_"+c.toString(), first_categories(c-1))
+        }
+      }
+      if (product._7 != None) {
+        val salesRanks = product._7.get.asInstanceOf[Map[String,Double]]
+        
+        for (idx <- 0 until included_categories.length) {
+          if (salesRanks.contains(included_categories.apply(idx))) {
+            included_salesranks += salesRanks.get(included_categories.apply(idx)).get.toInt
+            writer.writeNumberField("labels.PRODUCT_SALESRANK_"+idx.toString, salesRanks.get(included_categories.apply(idx)).get.toInt)
+          }
+        }
+      }
     }
     if (session.currentState.page=="NextSong") {
       writer.writeStringField("artist", session.currentSong.get._2)
@@ -149,7 +206,76 @@ class User(val alpha: Double,
       })
     }
     val propString = propArray.mkString("\t")
-    val csvString:String = "%s\t%s\t%d\t%s\t%s\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n".format(
+    
+    var productArray:ArrayBuffer[String] = ArrayBuffer[String]()
+    if (eventsWithProductData.contains(session.currentState.page)) {
+      val product = session.currentProduct.get
+      
+      //(asin, description, title, price, imUrl, related, salesRank, brand, categories)
+      productArray += product._1.get.asInstanceOf[String]
+      product._2 match {
+        case Some(i) => productArray += i.asInstanceOf[String]
+        case None => productArray += ""
+      }
+      product._3 match {
+        case Some(i) => productArray += i.asInstanceOf[String]
+        case None => productArray += ""
+      }
+      product._4 match {
+        case Some(i) => productArray += i.asInstanceOf[Double].toString()
+        case None => productArray += ""
+      }
+      product._5 match {
+        case Some(i) => productArray += i.asInstanceOf[String]
+        case None => productArray += ""
+      }
+      
+      // dropping related
+      
+      product._8 match {
+        case Some(i) => productArray += i.asInstanceOf[String]
+        case None => productArray += ""
+      }
+      product._9 match {
+        case Some(i) => {
+          for (idx <- 0 until 6) {
+            if (included_categories.isDefinedAt(idx)) {
+              productArray += included_categories.apply(idx)
+            } else {
+              productArray += ""
+            }
+          }
+        }
+        case None => {
+          for (idx <- 0 until 6) {
+            productArray += ""
+          }
+        }
+      }
+      product._7 match {
+        case Some(i) => {
+          for (idx <- 0 until 6) {
+            if (included_categories.isDefinedAt(idx) && included_salesranks.contains(included_categories.apply(idx))) {
+              productArray += included_categories.apply(idx)
+            } else {
+              productArray += ""
+            }
+          }
+        }
+        case None => {
+          for (idx <- 0 until 6) {
+            productArray += ""
+          }
+        }
+      }
+    } else {
+      for (idx <- 0 until 18) {
+        productArray += ""
+      }
+    }
+    val productString = productArray.mkString("\t")
+    
+    val csvString:String = "%s\t%s\t%d\t%s\t%s\t%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n".format(
         sdfSimple.format(new Date(session.nextEventTimeStamp.get.toInstant(ZoneOffset.UTC).toEpochMilli)),
         session.currentState.page,
         session.sessionId,
@@ -163,7 +289,8 @@ class User(val alpha: Double,
         session.currentState.status,
         session.currentState.level,
         session.itemInSession,
-        propString
+        propString,
+        productString
     )
     csvstream.write(csvString.getBytes)
     
@@ -193,6 +320,40 @@ class User(val alpha: Double,
     imwriter.writeStringField("http_method", session.currentState.method)
     imwriter.writeStringField("http_status", session.currentState.status.toString)
     imwriter.writeStringField("user_level", session.currentState.level)
+    if (eventsWithProductData.contains(session.currentState.page)) {
+      val product = session.currentProduct.get
+      
+      //(asin, description, title, price, imUrl, related, salesRank, brand, categories)
+      imwriter.writeStringField("product_asin", product._1.get.asInstanceOf[String])
+      if (product._2 != None) {
+        imwriter.writeStringField("product_description", product._2.get.asInstanceOf[String])
+      }
+      if (product._3 != None) {
+        imwriter.writeStringField("product_title", product._3.get.asInstanceOf[String])
+      }
+      if (product._5 != None) {
+        imwriter.writeStringField("product_imurl", product._5.get.asInstanceOf[String])
+      }
+      if (product._6 != None) {
+        val related = product._6.get.asInstanceOf[Map[String,List[String]]]
+        
+        for ((k,v) <- related) {
+          imwriter.writeStringField("product_related_"+k, v.mkString(","))
+        }
+      }
+      if (product._8 != None) {
+        imwriter.writeStringField("product_brand", product._8.get.asInstanceOf[String])
+      }
+      if (product._9 != None) {
+        val categories = product._9.get.asInstanceOf[List[List[String]]]
+        val first_categories = categories(0)
+        
+        for(c <- 1 until first_categories.length+1) {
+          included_categories += first_categories(c-1)
+          imwriter.writeStringField("product_categories_"+c.toString(), first_categories(c-1))
+        }
+      }
+    }
     imwriter.writeEndObject()
     
     imwriter.writeObjectFieldStart("values")
@@ -207,8 +368,26 @@ class User(val alpha: Double,
           case _: Float => imwriter.writeNumberField(key, p._2.asInstanceOf[Float])
           case _ =>
         }})
-      if (Main.tag.isDefined)
-        imwriter.writeStringField("tag", Main.tag.get)
+    }
+    if (eventsWithProductData.contains(session.currentState.page)) {
+      val product = session.currentProduct.get
+      
+      //(asin, description, title, price, imUrl, related, salesRank, brand, categories)
+      if (product._4 != None) {
+        val price = product._4.get.asInstanceOf[Double]
+        
+        imwriter.writeNumberField("product_price", price)
+      }
+      if (product._7 != None) {
+        val salesRanks = product._7.get.asInstanceOf[Map[String,Double]]
+        
+        for ((k,v) <- salesRanks) {
+          val category_idx = included_categories.indexOf(k)
+          if (category_idx > -1) {
+            imwriter.writeNumberField("product_salesrank_"+category_idx.toString, v.toInt)  
+          }
+        }
+      }
     }
     imwriter.writeEndObject()
     
