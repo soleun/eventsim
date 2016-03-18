@@ -33,6 +33,7 @@ class User(val alpha: Double,
   var currentCartValue = 0.0;
   var currentItemsInCart = 0;
   val eventsWithProductData:List[String] = List("Product Searched", "Return in Store", "Add To Cart", "Bar Code Scanned", "Checkout", "Product Compared", "Product Rated", "Product Recommended", "Product Reviewed", "Product Shared", "Product Viewed") 
+  val eventsWithCustomerData:List[String] = List("Set Customer Profile")
   
   var lastEventTime = this.session.nextEventTimeStamp
   var prevSessionId = this.session.sessionId
@@ -114,12 +115,12 @@ class User(val alpha: Double,
     writer.writeStringField("actors.CUSTOMER.CUSTOMER_ID", if (showUserDetails) userId.toString else "")
     writer.writeNumberField("actors.CUSTOMER.SESSION_ID", session.sessionId)
     writer.writeStringField("eventType", session.currentState.page)
-    writer.writeStringField("labels.AUTH", session.currentState.auth)
-    writer.writeStringField("labels.HTTP_METHOD", session.currentState.method)
-    writer.writeNumberField("labels.HTTP_STATUS", session.currentState.status)
-    writer.writeStringField("labels.USER_LEVEL", session.currentState.level)
-    writer.writeNumberField("labels.ITEM_IN_SESSION", session.itemInSession)
-    if (showUserDetails) {
+    //writer.writeStringField("labels.AUTH", session.currentState.auth)
+    //writer.writeStringField("labels.HTTP_METHOD", session.currentState.method)
+    //writer.writeNumberField("labels.HTTP_STATUS", session.currentState.status)
+    //writer.writeStringField("labels.USER_LEVEL", session.currentState.level)
+    //writer.writeNumberField("labels.ITEM_IN_SESSION", session.itemInSession)
+    if (showUserDetails && eventsWithCustomerData.contains(session.currentState.page)) {
       props.foreach((p: (String, Any)) => {
         p._2 match {
           case _: Long => writer.writeNumberField(p._1, p._2.asInstanceOf[Long])
@@ -305,7 +306,7 @@ class User(val alpha: Double,
     imwriter.writeEndObject()
     
     imwriter.writeObjectFieldStart("labels")
-    if (showUserDetails) {
+    if (showUserDetails && eventsWithCustomerData.contains(session.currentState.page)) {
       props.foreach((p: (String, Any)) => {
         val key = p._1.split("""\.""").last.toLowerCase()
         p._2 match {
@@ -316,10 +317,10 @@ class User(val alpha: Double,
       if (Main.tag.isDefined)
         imwriter.writeStringField("tag", Main.tag.get)
     }
-    imwriter.writeStringField("auth", session.currentState.auth)
-    imwriter.writeStringField("http_method", session.currentState.method)
-    imwriter.writeStringField("http_status", session.currentState.status.toString)
-    imwriter.writeStringField("user_level", session.currentState.level)
+    //imwriter.writeStringField("auth", session.currentState.auth)
+    //imwriter.writeStringField("http_method", session.currentState.method)
+    //imwriter.writeStringField("http_status", session.currentState.status.toString)
+    //imwriter.writeStringField("user_level", session.currentState.level)
     if (eventsWithProductData.contains(session.currentState.page)) {
       val product = session.currentProduct.get
       
@@ -358,7 +359,7 @@ class User(val alpha: Double,
     
     imwriter.writeObjectFieldStart("values")
     imwriter.writeNumberField("item_in_session", session.itemInSession)
-    if (showUserDetails) {
+    if (showUserDetails && eventsWithCustomerData.contains(session.currentState.page)) {
       props.foreach((p: (String, Any)) => {
         val key = p._1.split("""\.""").last.toLowerCase()
         p._2 match {
