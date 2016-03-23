@@ -15,10 +15,10 @@ import scala.io.Source
 class User(val alpha: Double,
            val beta: Double,
            val startTime: LocalDateTime,
-           val initialSessionStates: scala.collection.Map[(String,String),WeightedRandomThingGenerator[State]],
+           val initialSessionStates: Map[(String,String),WeightedRandomThingGenerator[State]],
            val auth: String,
            val props: Map[String,Any],
-           var device: scala.collection.immutable.Map[String,Any],
+           var device: Map[String,Any],
            val initialLevel: String,
            val stream: OutputStream,
            val csvstream: OutputStream,
@@ -29,14 +29,19 @@ class User(val alpha: Double,
   var session = new Session(
     Some(Session.pickFirstTimeStamp(startTime, alpha, beta)),
       alpha, beta, initialSessionStates, auth, initialLevel)
+  val cart = new Cart
+  
+  val showUserDetails = ConfigFromFile.showUserWithState(session.currentState.auth)
   
   var currentCartValue = 0.0;
   var currentItemsInCart = 0;
-  val eventsWithProductData:List[String] = List("Product Searched", "Return in Store", "Add To Cart", "Bar Code Scanned", "Checkout", "Product Compared", "Product Rated", "Product Recommended", "Product Reviewed", "Product Shared", "Product Viewed") 
+  val eventsWithProductData:List[String] = List("Product Searched", "Return in Store", "Add To Cart", "Bar Code Scanned", "Product Compared", "Product Rated", "Product Recommended", "Product Reviewed", "Product Shared", "Product Viewed") 
   val eventsWithCustomerData:List[String] = List("Set Customer Profile")
   
   var lastEventTime = this.session.nextEventTimeStamp
   var prevSessionId = this.session.sessionId
+  var prevProducts = ArrayBuffer[Product]()
+  var lastProduct:Option[Product] = Some(this.session.currentProduct)
 
   override def compare(that: User) =
     (that.session.nextEventTimeStamp, this.session.nextEventTimeStamp) match {
@@ -66,7 +71,6 @@ class User(val alpha: Double,
   private val EMPTY_MAP = Map()
 
   def eventString = {
-    val showUserDetails = ConfigFromFile.showUserWithState(session.currentState.auth)
     val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ")
     var m = device.+(
       "ts" -> sdf.format(new Date(session.nextEventTimeStamp.get.toInstant(ZoneOffset.UTC).toEpochMilli)),
@@ -99,13 +103,62 @@ class User(val alpha: Double,
 
   val writer = User.jsonFactory.createGenerator(stream, JsonEncoding.UTF8)
   val imwriter = User.jsonFactory.createGenerator(imstream, JsonEncoding.UTF8)
+  
+  def writeEvent() = {    
+    val eventType = session.currentState.page
+    
+    val currentProduct = if(eventsWithProductData.contains(session.currentState.page)) {
+      Some(session.currentProduct)
+    } else {
+      None
+    }
+    
+    var additionalProps:Option[Map[String,Any]] = None
+    
+    eventType match {
+      case "Add To Cart" => {
+        session.currentProduct = lastProduct.get
+        val product = lastProduct
+        cart.addItem(product.get, 1)
+        additionalProps = cart.getCartProps()
+      }
+      case "Checkout" => {
+        additionalProps = cart.getCheckoutProps()
+        cart.clearCart()
+      }
+      case "Cart Abandoned" => {
+        cart.clearCart()
+      }
+      case _ => {}
+    }
+    
+    var (included_categories, included_salesranks) = writeDP(additionalProps)   
+    writeCSV(included_categories, included_salesranks)   
+    writeIM(included_categories, included_salesranks)
 
-  def writeEvent() = {
-    // use Jackson streaming to maximize efficiency
-    // (earlier versions used Scala's std JSON generators, but they were slow)
-    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ")
-    val sdfSimple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-    val showUserDetails = ConfigFromFile.showUserWithState(session.currentState.auth)
+    this.lastEventTime = session.nextEventTimeStamp
+    this.prevSessionId = session.sessionId
+    this.lastProduct = currentProduct
+  }
+
+  def tsToString(ts: LocalDateTime) = ts.toString()
+
+  def nextEventTimeStampString =
+    tsToString(this.session.nextEventTimeStamp.get)
+
+  def mkString = props.+(
+    "alpha" -> alpha,
+    "beta" -> beta,
+    "startTime" -> tsToString(startTime),
+    "initialSessionStates" -> initialSessionStates,
+    "nextEventTimeStamp" -> tsToString(session.nextEventTimeStamp.get) ,
+    "sessionId" -> session.sessionId ,
+    "userId" -> userId ,
+    "currentState" -> session.currentState)
+    
+    
+  def writeDP(additionalProps:Option[Map[String,Any]]) = {
+    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ")
     
     var included_categories:ArrayBuffer[String] = ArrayBuffer[String]()
     var included_salesranks:ArrayBuffer[Integer] = ArrayBuffer[Integer]()
@@ -129,41 +182,54 @@ class User(val alpha: Double,
           case _: Float => writer.writeNumberField(p._1, p._2.asInstanceOf[Float])
           case _: String => writer.writeStringField(p._1, p._2.asInstanceOf[String])
           case _: Date => writer.writeStringField(p._1, sdf.format(p._2).toString)
-        }})
+        }
+      })
       if (Main.tag.isDefined)
-        writer.writeStringField("actors.CUSTOMER.TAG", Main.tag.get)
+          writer.writeStringField("actors.CUSTOMER.TAG", Main.tag.get)
+    }
+    if (additionalProps.isDefined) {
+      additionalProps.get.foreach((p: (String, Any)) => {
+        p._2 match {
+          case _: Long => writer.writeNumberField("numbers."+p._1, p._2.asInstanceOf[Long])
+          case _: Int => writer.writeNumberField("numbers."+p._1, p._2.asInstanceOf[Int])
+          case _: Double => writer.writeNumberField("numbers."+p._1, p._2.asInstanceOf[Double])
+          case _: Float => writer.writeNumberField("numbers."+p._1, p._2.asInstanceOf[Float])
+          case _: String => writer.writeStringField("labels."+p._1, p._2.asInstanceOf[String])
+          case _: Date => writer.writeStringField("labels."+p._1, sdf.format(p._2).toString)
+        }
+      })
     }
     if (eventsWithProductData.contains(session.currentState.page)) {
-      val product = session.currentProduct.get
+      val product = session.currentProduct
       
       //(asin, description, title, price, imUrl, related, salesRank, brand, categories)
-      writer.writeStringField("labels.PRODUCT_ASIN", product._1.get.asInstanceOf[String])
-      if (product._2 != None) {
-        writer.writeStringField("labels.PRODUCT_DESCRIPTION", product._2.get.asInstanceOf[String])
+      writer.writeStringField("labels.PRODUCT_ASIN", product.asin)
+      if (product.description.isDefined) {
+        writer.writeStringField("labels.PRODUCT_DESCRIPTION", product.description.get.asInstanceOf[String])
       }
-      if (product._3 != None) {
-        writer.writeStringField("labels.PRODUCT_TITLE", product._3.get.asInstanceOf[String])
+      if (product.title.isDefined) {
+        writer.writeStringField("labels.PRODUCT_TITLE", product.title.get.asInstanceOf[String])
       }
-      if (product._4 != None) {
-        val price = product._4.get.asInstanceOf[Double]
+      if (product.price.isDefined) {
+        val price = product.price.get.asInstanceOf[Double]
         
-        writer.writeNumberField("labels.PRODUCT_PRICE", price)
+        writer.writeNumberField("numbers.PRODUCT_PRICE", price)
       }
-      if (product._5 != None) {
-        writer.writeStringField("labels.PRODUCT_IMURL", product._5.get.asInstanceOf[String])
+      if (product.imUrl.isDefined) {
+        writer.writeStringField("labels.PRODUCT_IMURL", product.imUrl.get.asInstanceOf[String])
       }
-      if (product._6 != None) {
-        val related = product._6.get.asInstanceOf[Map[String,List[String]]]
+      if (product.related.isDefined) {
+        val related = product.related.get.asInstanceOf[Map[String,List[String]]]
         
         for ((k,v) <- related) {
           writer.writeStringField("labels.PRODUCT_RELATED_"+k, v.mkString(","))
         }
       }
-      if (product._8 != None) {
-        writer.writeStringField("labels.PRODUCT_BRAND", product._8.get.asInstanceOf[String])
+      if (product.brand.isDefined) {
+        writer.writeStringField("labels.PRODUCT_BRAND", product.brand.get.asInstanceOf[String])
       }
-      if (product._9 != None) {
-        val categories = product._9.get.asInstanceOf[List[List[String]]]
+      if (product.categories.isDefined) {
+        val categories = product.categories.get.asInstanceOf[List[List[String]]]
         val first_categories = categories(0)
         
         for(c <- 1 until first_categories.length+1) {
@@ -171,13 +237,13 @@ class User(val alpha: Double,
           writer.writeStringField("labels.PRODUCT_CATEGORIES_"+c.toString(), first_categories(c-1))
         }
       }
-      if (product._7 != None) {
-        val salesRanks = product._7.get.asInstanceOf[Map[String,Double]]
+      if (product.salesRank.isDefined) {
+        val salesRanks = product.salesRank.get.asInstanceOf[Map[String,Double]]
         
-        for (idx <- 0 until included_categories.length) {
-          if (salesRanks.contains(included_categories.apply(idx))) {
-            included_salesranks += salesRanks.get(included_categories.apply(idx)).get.toInt
-            writer.writeNumberField("labels.PRODUCT_SALESRANK_"+idx.toString, salesRanks.get(included_categories.apply(idx)).get.toInt)
+        for (idx <- 1 until included_categories.length+1) {
+          if (salesRanks.contains(included_categories.apply(idx-1))) {
+              included_salesranks += salesRanks.get(included_categories.apply(idx-1)).get.toInt
+              writer.writeNumberField("labels.PRODUCT_SALESRANK_"+(idx).toString, salesRanks.get(included_categories.apply(idx-1)).get.toInt)
           }
         }
       }
@@ -187,9 +253,16 @@ class User(val alpha: Double,
       writer.writeStringField("song",  session.currentSong.get._3)
       writer.writeNumberField("length", session.currentSong.get._4)
     }
+    
     writer.writeEndObject()
     writer.writeRaw('\n')
     writer.flush()
+    
+    (included_categories, included_salesranks)
+  }
+  
+  def writeCSV(included_categories:ArrayBuffer[String], included_salesranks:ArrayBuffer[Integer]) = {
+    val sdfSimple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
     
     var propArray:Array[String] = Array()
     if (showUserDetails) {
@@ -210,34 +283,34 @@ class User(val alpha: Double,
     
     var productArray:ArrayBuffer[String] = ArrayBuffer[String]()
     if (eventsWithProductData.contains(session.currentState.page)) {
-      val product = session.currentProduct.get
+      val product = session.currentProduct
       
       //(asin, description, title, price, imUrl, related, salesRank, brand, categories)
-      productArray += product._1.get.asInstanceOf[String]
-      product._2 match {
+      productArray += product.asin
+      product.description match {
         case Some(i) => productArray += i.asInstanceOf[String]
         case None => productArray += ""
       }
-      product._3 match {
+      product.title match {
         case Some(i) => productArray += i.asInstanceOf[String]
         case None => productArray += ""
       }
-      product._4 match {
+      product.price match {
         case Some(i) => productArray += i.asInstanceOf[Double].toString()
         case None => productArray += ""
       }
-      product._5 match {
+      product.imUrl match {
         case Some(i) => productArray += i.asInstanceOf[String]
         case None => productArray += ""
       }
       
       // dropping related
       
-      product._8 match {
+      product.brand match {
         case Some(i) => productArray += i.asInstanceOf[String]
         case None => productArray += ""
       }
-      product._9 match {
+      product.categories match {
         case Some(i) => {
           for (idx <- 0 until 6) {
             if (included_categories.isDefinedAt(idx)) {
@@ -253,7 +326,7 @@ class User(val alpha: Double,
           }
         }
       }
-      product._7 match {
+      product.salesRank match {
         case Some(i) => {
           for (idx <- 0 until 6) {
             if (included_categories.isDefinedAt(idx) && included_salesranks.contains(included_categories.apply(idx))) {
@@ -294,7 +367,10 @@ class User(val alpha: Double,
         productString
     )
     csvstream.write(csvString.getBytes)
-    
+  }
+  
+  def writeIM(included_categories:ArrayBuffer[String], included_salesranks:ArrayBuffer[Integer]) = {
+    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ")
     
     // Writing IM File
     imwriter.writeStartObject()
@@ -322,31 +398,31 @@ class User(val alpha: Double,
     //imwriter.writeStringField("http_status", session.currentState.status.toString)
     //imwriter.writeStringField("user_level", session.currentState.level)
     if (eventsWithProductData.contains(session.currentState.page)) {
-      val product = session.currentProduct.get
+      val product = session.currentProduct
       
       //(asin, description, title, price, imUrl, related, salesRank, brand, categories)
-      imwriter.writeStringField("product_asin", product._1.get.asInstanceOf[String])
-      if (product._2 != None) {
-        imwriter.writeStringField("product_description", product._2.get.asInstanceOf[String])
+      imwriter.writeStringField("product_asin", product.asin)
+      if (product.description.isDefined) {
+        imwriter.writeStringField("product_description", product.description.get.asInstanceOf[String])
       }
-      if (product._3 != None) {
-        imwriter.writeStringField("product_title", product._3.get.asInstanceOf[String])
+      if (product.title.isDefined) {
+        imwriter.writeStringField("product_title", product.title.get.asInstanceOf[String])
       }
-      if (product._5 != None) {
-        imwriter.writeStringField("product_imurl", product._5.get.asInstanceOf[String])
+      if (product.imUrl.isDefined) {
+        imwriter.writeStringField("product_imurl", product.imUrl.get.asInstanceOf[String])
       }
-      if (product._6 != None) {
-        val related = product._6.get.asInstanceOf[Map[String,List[String]]]
+      if (product.related.isDefined) {
+        val related = product.related.get.asInstanceOf[Map[String,List[String]]]
         
         for ((k,v) <- related) {
           imwriter.writeStringField("product_related_"+k, v.mkString(","))
         }
       }
-      if (product._8 != None) {
-        imwriter.writeStringField("product_brand", product._8.get.asInstanceOf[String])
+      if (product.brand.isDefined) {
+        imwriter.writeStringField("product_brand", product.brand.get.asInstanceOf[String])
       }
-      if (product._9 != None) {
-        val categories = product._9.get.asInstanceOf[List[List[String]]]
+      if (product.categories.isDefined) {
+        val categories = product.categories.get.asInstanceOf[List[List[String]]]
         val first_categories = categories(0)
         
         for(c <- 1 until first_categories.length+1) {
@@ -371,16 +447,16 @@ class User(val alpha: Double,
         }})
     }
     if (eventsWithProductData.contains(session.currentState.page)) {
-      val product = session.currentProduct.get
+      val product = session.currentProduct
       
       //(asin, description, title, price, imUrl, related, salesRank, brand, categories)
-      if (product._4 != None) {
-        val price = product._4.get.asInstanceOf[Double]
+      if (product.price.isDefined) {
+        val price = product.price.get.asInstanceOf[Double]
         
         imwriter.writeNumberField("product_price", price)
       }
-      if (product._7 != None) {
-        val salesRanks = product._7.get.asInstanceOf[Map[String,Double]]
+      if (product.salesRank.isDefined) {
+        val salesRanks = product.salesRank.get.asInstanceOf[Map[String,Double]]
         
         for ((k,v) <- salesRanks) {
           val category_idx = included_categories.indexOf(k)
@@ -395,27 +471,7 @@ class User(val alpha: Double,
     imwriter.writeEndObject()
     imwriter.writeRaw('\n')
     imwriter.flush()
-    
-    
-    
-    this.lastEventTime = session.nextEventTimeStamp
-    this.prevSessionId = session.sessionId
   }
-
-  def tsToString(ts: LocalDateTime) = ts.toString()
-
-  def nextEventTimeStampString =
-    tsToString(this.session.nextEventTimeStamp.get)
-
-  def mkString = props.+(
-    "alpha" -> alpha,
-    "beta" -> beta,
-    "startTime" -> tsToString(startTime),
-    "initialSessionStates" -> initialSessionStates,
-    "nextEventTimeStamp" -> tsToString(session.nextEventTimeStamp.get) ,
-    "sessionId" -> session.sessionId ,
-    "userId" -> userId ,
-    "currentState" -> session.currentState)
 }
 
 object User {

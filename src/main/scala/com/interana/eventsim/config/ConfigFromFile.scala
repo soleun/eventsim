@@ -12,7 +12,7 @@ import scala.io.Source
 
 object ConfigFromFile {
 
-  val initialStates = scala.collection.mutable.HashMap[(String,String),WeightedRandomThingGenerator[State]]()
+  var initialStates = Map[(String,String),WeightedRandomThingGenerator[State]]()
 
   new State(("NEW_SESSION","INITIAL_STATUS",200,"",""))
   val showUserWithState = new mutable.HashMap[String, Boolean]()
@@ -207,7 +207,7 @@ object ConfigFromFile {
         val stateTuple = readState(item)
         val (_,auth,_,_,level) = stateTuple
         if (!initialStates.contains((auth,level)))
-          initialStates.put((auth,level), new WeightedRandomThingGenerator[State]())
+          initialStates = initialStates + ((auth,level) -> new WeightedRandomThingGenerator[State]())
         if (!states.contains(stateTuple))
           throw new Exception("Unkown state found while processing initial states: " + stateTuple.toString())
   

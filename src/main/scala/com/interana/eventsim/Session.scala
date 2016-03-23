@@ -22,7 +22,7 @@ class Session(var nextEventTimeStamp: Option[LocalDateTime],
   var currentState: State = initialStates((auth, level)).randomThing
   var previousState: State = initialStates((auth, level)).randomThing
   val previousEventTimeStamp: Option[LocalDateTime] = nextEventTimeStamp
-  var currentProduct: Option[(Option[String], Option[String], Option[String], Option[Double], Option[String], Option[Map[String, List[String]]], Option[Map[String, Double]], Option[String], Option[List[List[String]]])] = Some(RandomProductGenerator.nextProduct())
+  var currentProduct: Product = RandomProductGenerator.nextProduct()
   var currentSong: Option[(String, String, String, Double)] =
     if (currentState.page == "NextSong") Some(RandomSongGenerator.nextSong()) else None
   var currentSongEnd: Option[LocalDateTime] =
@@ -46,13 +46,13 @@ class Session(var nextEventTimeStamp: Option[LocalDateTime],
 
         case x if x.get.page == "NextSong" =>
           if (currentSong.isEmpty) {
-            nextEventTimeStamp = Some(nextEventTimeStamp.get.plusSeconds(exponentialRandomValue(alpha * tt.get).toInt))
+            nextEventTimeStamp = Some(nextEventTimeStamp.get.plusNanos(exponentialRandomValue(alpha * tt.get * 1000000000).toLong))
             currentSong = Some(RandomSongGenerator.nextSong())
           } else if (nextEventTimeStamp.get.isBefore(currentSongEnd.get)) {
             nextEventTimeStamp = currentSongEnd
             currentSong = Some(RandomSongGenerator.nextSong(currentSong.get._1))
           } else {
-            nextEventTimeStamp = Some(nextEventTimeStamp.get.plusSeconds(exponentialRandomValue(alpha * tt.get).toInt))
+            nextEventTimeStamp = Some(nextEventTimeStamp.get.plusNanos(exponentialRandomValue(alpha * tt.get * 1000000000).toLong))
             currentSong = Some(RandomSongGenerator.nextSong(currentSong.get._1))
           }
           currentSongEnd = Some(nextEventTimeStamp.get.plusSeconds(currentSong.get._4.toInt))
@@ -60,7 +60,7 @@ class Session(var nextEventTimeStamp: Option[LocalDateTime],
           itemInSession += 1
 
         case _ =>
-          nextEventTimeStamp = Some(nextEventTimeStamp.get.plusSeconds(exponentialRandomValue(alpha * tt.get).toInt))
+          nextEventTimeStamp = Some(nextEventTimeStamp.get.plusNanos(exponentialRandomValue(alpha * tt.get * 1000000000).toLong))
           currentState = nextState.get
           itemInSession += 1
 
