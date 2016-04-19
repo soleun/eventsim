@@ -1,10 +1,13 @@
 package com.interana.eventsim.config
 
 import com.interana.eventsim.{Constants, State, WeightedRandomThingGenerator}
+import com.interana.eventsim.EventType
+import com.interana.eventsim.EventTransition
+import com.interana.eventsim.Channel
 import com.pointillist.util.GaussianRandomNumberGenerator
-
 import scala.collection.mutable
 import scala.io.Source
+import com.interana.eventsim.Channel
 
 /**
  *  Site configuration (loaded from JSON file, used to run simulation)
@@ -18,7 +21,10 @@ object ConfigFromFile {
   val showUserWithState = new mutable.HashMap[String, Boolean]()
   val levelGenerator = new WeightedRandomThingGenerator[String]()
   val authGenerator = new WeightedRandomThingGenerator[String]()
-  val attributeSetGenerator = new mutable.HashMap[String, Any]()
+  val eventTypes = new mutable.HashMap[String, EventType]()
+  val entryPoints = new mutable.HashMap[String,WeightedRandomThingGenerator[EventType]]()
+  val individualAttributeSetGenerator = new mutable.HashMap[String, Any]()
+  val groupBehaviorGenerator = new mutable.HashMap[String, Any]()
 
   // optional config values
   var alpha:Double = 60.0
@@ -29,10 +35,11 @@ object ConfigFromFile {
   var weekendDampingOffset:Int = Constants.DEFAULT_WEEKEND_DAMPING_OFFSET
   var weekendDampingScale:Int = Constants.DEFAULT_WEEKEND_DAMPING_SCALE
   var sessionGap:Int = Constants.DEFAULT_SESSION_GAP
-  var churnedState:Option[String] = None
+  var churnedStates:List[String] = List()
   var seed = 0L
   var newUserAuth:String = Constants.DEFAULT_NEW_USER_AUTH
   var newUserLevel:String = Constants.DEFAULT_NEW_USER_LEVEL
+  var csvHeaders:List[String] = List()
 
   var startDate:Option[String] = None
   var endDate:Option[String] = None
@@ -63,6 +70,7 @@ object ConfigFromFile {
   val WEIGHT = "weight"
   val SEED = "seed"
   val SESSION_GAP = "session-gap"
+  val EVENT_TYPES = "event-types"
 
   val ALPHA = "alpha"
   val BETA = "beta"
@@ -78,7 +86,10 @@ object ConfigFromFile {
   val GROWTH_RATE = "growth-rate"
   val TAG = "tag"
   
-  val ATTRIBUTE_SETS = "attribute-sets"
+  val INDIVIDUAL_ATTRIBUTE_SETS = "individual-attribute-sets"
+  val GROUP_BEHAVIOR_SETS = "group-behavior-sets"
+  
+  val CSV_HEADERS = "csv-headers"
 
   def configFileLoader(fn: String) = {
 
@@ -175,9 +186,39 @@ object ConfigFromFile {
     }
 
 
-    churnedState = jsonContents.get(CHURNED_STATE).asInstanceOf[Option[String]]
+    churnedStates = jsonContents.getOrElse(CHURNED_STATE, List()).asInstanceOf[List[String]]
+    csvHeaders = jsonContents.getOrElse(CSV_HEADERS, List()).asInstanceOf[List[String]]
+    
+    val event_types = jsonContents.getOrElse(EVENT_TYPES,List()).asInstanceOf[List[Any]]
+    for (event <- event_types) {
+      val item = event.asInstanceOf[Map[String,Any]]
+      val name = item.getOrElse("name","").asInstanceOf[String]
+      val endOfSessionTimeGap = item.getOrElse("end-of-session-time-gap",0).asInstanceOf[Double].toInt
+      val newSessionWeight = item.getOrElse("new-session-weight",0).asInstanceOf[Double].toInt
+      val channels = item.getOrElse("compatible-channels",None).asInstanceOf[List[String]]
+      val compatibleChannels = mutable.HashMap[String,Channel]()
+      val appendUserAttributes = item.getOrElse("append-user-attributes",List()).asInstanceOf[List[String]]
+      val removeUserAttributes = item.getOrElse("remove-user-attributes",List()).asInstanceOf[List[String]]
+      val additionalActors = item.getOrElse("additional-actors",List()).asInstanceOf[List[Map[String, String]]]
+      
+      for (channel <- channels) {
+        compatibleChannels.put(channel, new Channel(channel))
+      }
+      
+      val et = new EventType(name, compatibleChannels, endOfSessionTimeGap, additionalActors, (appendUserAttributes.toSet, removeUserAttributes.toSet))
+      eventTypes.put(name, et)
+      if(newSessionWeight > 0) {
+        for (channel <- channels) {
+          if(!entryPoints.keySet.contains(channel)) {
+            entryPoints.put(channel, new WeightedRandomThingGenerator[EventType]())
+          }
+          entryPoints.get(channel).get.add(et, newSessionWeight)
+        }
+      }
+    }
 
     val states = new mutable.HashMap[(String,String,Int,String,String), State]
+    val eventTransitions = new mutable.HashMap[(String,String,Int,String,String), EventTransition]
 
     val transitions = jsonContents.getOrElse(TRANSITIONS,List()).asInstanceOf[List[Any]]
     for (t <- transitions) {
@@ -186,11 +227,25 @@ object ConfigFromFile {
       val dest = readState(transition.getOrElse(DEST,List()).asInstanceOf[Map[String,Any]])
       val p      = transition.getOrElse(P,Unit).asInstanceOf[Double]
       val tt     = transition.getOrElse(T,(1.0).toDouble).asInstanceOf[Double]
+      
+      /* 
+       * adding EventTransitions
+       */
+      val sourceEvent = eventTypes.get(source._1)
+      val destEvent = eventTypes.get(dest._1)
+      
+      if(sourceEvent.isDefined && destEvent.isDefined) {
+        sourceEvent.get.addTransition(new EventTransition(sourceEvent.get, destEvent.get, p, tt))
+      }
 
+      /*
+       * old code
+       */
+      
       if (!states.contains(source)) {
         states += (source ->
           new State(source))
-      }
+      }    
       if (!states.contains(dest)) {
         states += (dest ->
           new State(dest))
@@ -241,9 +296,23 @@ object ConfigFromFile {
       authGenerator.add(levelName,levelWeight)
     }
     
-    val attribute_sets = jsonContents.getOrElse(ATTRIBUTE_SETS,List()).asInstanceOf[List[Any]]
-    for (attribute_set <- attribute_sets) {
-      val item = attribute_set.asInstanceOf[Map[String,Any]]
+    val individual_attribute_sets = jsonContents.getOrElse(INDIVIDUAL_ATTRIBUTE_SETS,List()).asInstanceOf[List[Any]]
+    processAttributeConfig(individual_attribute_sets, individualAttributeSetGenerator)
+    
+    val group_behavior_sets = jsonContents.getOrElse(GROUP_BEHAVIOR_SETS,List()).asInstanceOf[List[Any]]
+    processAttributeConfig(group_behavior_sets, groupBehaviorGenerator)
+  }
+
+  def readState(m: Map[String,Any]) =
+    (m.get(PAGE).get.asInstanceOf[String],
+     m.get(AUTH).get.asInstanceOf[String],
+     m.getOrElse(STATUS,"").asInstanceOf[Double].toInt,
+     m.getOrElse(METHOD,"").asInstanceOf[String],
+     m.getOrElse(LEVEL, "").asInstanceOf[String])
+     
+  def processAttributeConfig(sets:List[Any], generator:mutable.HashMap[String, Any]) = {
+    for (set <- sets) {
+      val item = set.asInstanceOf[Map[String,Any]]
       val setName = item.getOrElse("name","").asInstanceOf[String]
       val setType = item.getOrElse("type","").asInstanceOf[String]
       setType match {
@@ -255,7 +324,7 @@ object ConfigFromFile {
             if (v.asInstanceOf[Double].toInt > 0)
               weightedRandomGenerator.add(k.asInstanceOf[String], v.asInstanceOf[Double].toInt)
           }
-          attributeSetGenerator += (setName -> weightedRandomGenerator)
+          generator += (setName -> weightedRandomGenerator)
         case "numerical" =>
           val expected = item.getOrElse("expected","").asInstanceOf[Double]
           val min = item.getOrElse("min","").asInstanceOf[Double]
@@ -264,16 +333,9 @@ object ConfigFromFile {
           
           val gaussianRandomNumberGenerator = new GaussianRandomNumberGenerator(expected, min, max, sd)
           
-          attributeSetGenerator += (setName -> gaussianRandomNumberGenerator)
+          generator += (setName -> gaussianRandomNumberGenerator)
       }
     }
   }
-
-  def readState(m: Map[String,Any]) =
-    (m.get(PAGE).get.asInstanceOf[String],
-     m.get(AUTH).get.asInstanceOf[String],
-     m.getOrElse(STATUS,"").asInstanceOf[Double].toInt,
-     m.getOrElse(METHOD,"").asInstanceOf[String],
-     m.getOrElse(LEVEL, "").asInstanceOf[String])
 
 }

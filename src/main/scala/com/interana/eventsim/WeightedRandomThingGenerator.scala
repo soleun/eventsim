@@ -7,22 +7,22 @@ import scala.collection.mutable.ArrayBuffer
  */
 
 class WeightedRandomThingGenerator[T]  {
-  val ab = new ArrayBuffer[(T, Integer)](0)
-  var a = new Array[(T, Integer)](0)
+  val ab = new ArrayBuffer[(T, Double)](0)
+  var a = new Array[(T, Double)](0)
   var ready = false
-  var totalWeight: Integer = 0
+  var totalWeight: Double = 0.0
 
-  def add(t: (T, Integer)): Unit = {
+  def add(t: (T, Double)): Unit = {
     if (ready)
       throw new RuntimeException("called WeightedRandomThingGenerator.add after use")
     ab += ((t._1, totalWeight))
     totalWeight = totalWeight + t._2
   }
 
-  def add(thing: T, weight: Integer): Unit = add((thing, weight))
+  def add(thing: T, weight: Double): Unit = add((thing, weight))
 
-  object tupleSecondValueOrdering extends Ordering[(T, Integer)] {
-    override def compare(x: (T, Integer), y: (T, Integer)): Int = x._2.compareTo(y._2)
+  object tupleSecondValueOrdering extends Ordering[(T, Double)] {
+    override def compare(x: (T, Double), y: (T, Double)): Int = x._2.compareTo(y._2)
   }
 
   def randomThing = {
@@ -30,12 +30,12 @@ class WeightedRandomThingGenerator[T]  {
       a = ab.toArray
       ready = true
     }
-    val key: (T, Integer) = (null, TimeUtilities.rng.nextInt(totalWeight)).asInstanceOf[(T,Integer)]
+    val key: (T, Double) = (null, TimeUtilities.rng.nextDouble*totalWeight).asInstanceOf[(T,Double)]
     val idx = java.util.Arrays.binarySearch(a, key, tupleSecondValueOrdering)
     if (idx >= 0) a(idx)._1 else a(-idx - 2)._1
   }
 
   def mkString =
-    a.take(5).foldLeft("First 5 items:\n")((s:String,t:(T,Integer)) => s + "\t" + t.toString() + "\n")
+    a.take(5).foldLeft("First 5 items:\n")((s:String,t:(T,Double)) => s + "\t" + t.toString() + "\n")
 
 }

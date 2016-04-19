@@ -1,6 +1,7 @@
 package com.interana.eventsim
 
 import java.io.FileOutputStream
+import java.io.OutputStream
 import java.time.temporal.ChronoUnit
 import java.time.{Duration, LocalDateTime, ZoneOffset}
 import java.util.Properties
@@ -8,6 +9,7 @@ import java.util.Properties
 import com.interana.eventsim.Utilities.{SimilarSongParser, TrackListenCount}
 import com.interana.eventsim.buildin.{DeviceProperties, UserProperties}
 import com.interana.eventsim.config.ConfigFromFile
+import com.interana.eventsim.devices.Device
 import kafka.producer.{Producer, ProducerConfig}
 import org.rogach.scallop.{ScallopOption, ScallopConf}
 
@@ -130,6 +132,12 @@ object Main extends App {
   } else None
 
   val realTime = ConfFromOptions.realTime.get.get
+  
+  var CSVHeaders = List[String]()
+  List(Event, User, Session, Channel, Device, Product, Cart, Order).foreach { x => 
+    CSVHeaders = CSVHeaders ::: (x.getCSVHeaders().map { y => x.getNamespace()+"."+y })
+  }
+//  println(CSVHeaders)
 
   def generateEvents() = {
 
@@ -150,7 +158,7 @@ object Main extends App {
     var header:String = "eventTime\teventType\tsessionId\tprevEventTime\tprevEventType\tprevSessionId\tuserId\ttag\tauth\tmethod\tstatus\tlevel\titemInSession\tlastName\tlocation\trace\tregistration\tgender\tinterest\tperceived quality\tcar\tfirstName\tmarital status\twillingness to recommend\tactivity\trelative perceived quality\teducation\tattitude\tuserAgent\tage\tnps\temployment\tperceived value\tintentions\tpurchase intentions\tsatisfaction\tincome"
     //(asin, description, title, price, imUrl, related, brand, categories, salesRank)
     var productHeader:String = "product_asin\tproduct_description\tproduct_title\tproduct_price\tproduct_imurl\tproduct_brand\tproduct_categories_1\tproduct_categories_2\tproduct_categories_3\tproduct_categories_4\tproduct_categories_5\tproduct_categories_6\tproduct_salesranks_1\tproduct_salesranks_2\tproduct_salesranks_3\tproduct_salesranks_4\tproduct_salesranks_5\tproduct_salesranks_6"
-    csvout.write(header.concat("\t").concat(productHeader).concat("\n").getBytes)
+    csvout.write((CSVHeaders.mkString("\t")+"\n").getBytes)
     
     val imout = if (ConfFromOptions.outputIMFile.isSupplied) {
       new FileOutputStream(ConfFromOptions.outputIMFile())
@@ -158,19 +166,12 @@ object Main extends App {
       System.out
     }
     
+    val writers:Map[String,OutputStream] = Map("dp" -> out, "csv" -> csvout, "im" -> imout)
+    
     (0 until nUsers).foreach((_) =>      
       users += new User(
-        ConfigFromFile.alpha * logNormalRandomValue,
-        ConfigFromFile.beta * logNormalRandomValue,
         startTime,
-        ConfigFromFile.initialStates,
-        ConfigFromFile.authGenerator.randomThing,
-        UserProperties.customProps(ConfigFromFile.attributeSetGenerator),
-        DeviceProperties.randomProps,
-        ConfigFromFile.levelGenerator.randomThing,
-        out,
-        csvout,
-        imout
+        writers
       ))
 
     val growthRate = ConfigFromFile.growthRate.getOrElse(ConfFromOptions.growthRate.get.get)
@@ -180,17 +181,8 @@ object Main extends App {
         val mu = Constants.SECONDS_PER_YEAR / (nUsers * growthRate)
         current = current.plusSeconds(TimeUtilities.exponentialRandomValue(mu).toInt)
         users += new User(
-          ConfigFromFile.alpha * logNormalRandomValue,
-          ConfigFromFile.beta * logNormalRandomValue,
           current,
-          ConfigFromFile.initialStates,
-          ConfigFromFile.newUserAuth,
-          UserProperties.customProps(ConfigFromFile.attributeSetGenerator),
-          DeviceProperties.randomProps,
-          ConfigFromFile.newUserLevel,
-          out,
-          csvout,
-          imout
+          writers
         )
         nUsers += 1
       }

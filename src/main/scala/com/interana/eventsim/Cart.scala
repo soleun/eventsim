@@ -1,9 +1,24 @@
 package com.interana.eventsim
 
-import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable
+import com.interana.eventsim.buildin.RandomStringGenerator
 
-class Cart {
-  var items:Option[ArrayBuffer[CartItem]] = None
+class Cart extends Extractable {
+  def getNamespace() = {
+    "Cart"
+  }
+  
+  def getId() = {
+    RandomStringGenerator.randomThing
+  }
+  
+  def attributes = new mutable.HashMap[String, Any]()
+  
+  var items:Option[mutable.ArrayBuffer[CartItem]] = None
+    
+  def getCSVMap() = {
+    Map("total" -> getTotal(), "size" -> getSize())
+  }
   
   def clearCart() = {
     items = None
@@ -11,7 +26,7 @@ class Cart {
   
   def addItem(product:Product, qty:Integer) = {
     if(!items.isDefined) {
-      items = Some(ArrayBuffer[CartItem]())
+      items = Some(mutable.ArrayBuffer[CartItem]())
     }
     items.get += new CartItem(product, qty)
   }
@@ -30,25 +45,49 @@ class Cart {
     total
   }
   
-  def getCheckoutProps() = {
+  def getSize() = {
     var cartSize = 0
-    var cartTotal = 0.0
+    
     if(items.isDefined) {
-      cartSize = items.get.size
-      cartTotal = getTotal()
+      items.get.foreach { ci =>
+        cartSize += 1
+      }
     }
     
-    Some(Map("checkout_items" -> cartSize, "checkout_total" -> cartTotal))
+    cartSize
   }
   
-  def getCartProps() = {
-    var cartSize = 0
-    var cartTotal = 0.0
+  def getQty() = {
+    var qty = 0
+    
     if(items.isDefined) {
-      cartSize = items.get.size
-      cartTotal = getTotal()
+      items.get.foreach { ci =>
+        qty += ci.qty
+      }
     }
     
-    Some(Map("cart_items" -> cartSize, "cart_total" -> cartTotal))
+    qty
+  }
+  
+  def getAttributeMap() = {
+    mutable.HashMap("id" -> getId(), "itemCount" -> getSize(), "totalQty" -> getQty(), "total" -> getTotal())
+  }
+  
+  def getCheckoutProps() = {
+    Some(Map("checkout_items" -> getSize(), "checkout_qty" -> getQty(), "checkout_total" -> getTotal()))
+  }
+  
+  def getCartProps() = {    
+    Some(Map("cart_items" -> getSize(), "cart_qty" -> getQty(), "cart_total" -> getTotal()))
+  }
+}
+
+object Cart extends Actor {
+  def getNamespace() = {
+    "Cart"
+  }
+  
+  def getCSVHeaders() = {
+    List("total", "size")
   }
 }

@@ -16,7 +16,7 @@ object RandomLocationGenerator extends WeightedRandomThingGenerator[String] {
     """\d+\,[^\,]*\,[^\,]*\,\"([^\"]+)\"\,M(?:et|ic)ropolitan\ Statistical\ Area\,(\d+)\,.*""",
     "name", "pop")
   val fields = for {l <- lines; m <- cbsaRegex findFirstMatchIn l}
-    yield (m.group("name"), m.group("pop").toInt.asInstanceOf[Integer])
+    yield (m.group("name"), m.group("pop").toInt.asInstanceOf[Double])
   fields.foreach(this.add)
   s.close()
 

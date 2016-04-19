@@ -8,9 +8,9 @@ object RandomStringGenerator {
     
     def randomThing = {
         val n = random.nextInt(15)+5
-        val alphabet = "abcdefghijklmnopqrstuvwxyz0123456789_"
+        val alphanumericspace = "abcdefghijklmnopqrstuvwxyz0123456789_"
         
-        Stream.continually(random.nextInt(alphabet.size)).map(alphabet).take(n).mkString
+        Stream.continually(random.nextInt(alphanumericspace.size)).map(alphanumericspace).take(n).mkString
     }
     
     // Generate a random string of length n from the given alphabet
@@ -19,5 +19,8 @@ object RandomStringGenerator {
     
     // Generate a random alphabnumeric string of length n
     def randomAlphanumericString(n: Int) = 
+    randomString("abcdefghijklmnopqrstuvwxyz0123456789")(n)
+    
+    def randomAlphanumericSpaceString(n: Int) = 
     randomString("abcdefghijklmnopqrstuvwxyz0123456789_")(n)
 }

@@ -31,13 +31,13 @@ object UserProperties {
   }
   
   def customProps(m: mutable.HashMap[String,Any]) = {
-    var props = randomProps
+    var props:mutable.HashMap[String,Any] = mutable.HashMap[String,Any]()
     for ((k,v) <- m) {
       v match {
         case _: WeightedRandomThingGenerator[String] => 
-          props = props + ("labels."+k.toUpperCase() -> v.asInstanceOf[WeightedRandomThingGenerator[String]].randomThing)
+          props.put(k, v.asInstanceOf[WeightedRandomThingGenerator[String]].randomThing)
         case _: GaussianRandomNumberGenerator =>
-          props = props + ("numbers."+k.toUpperCase() -> v.asInstanceOf[GaussianRandomNumberGenerator].getRandomNumber)
+          props.put(k, v.asInstanceOf[GaussianRandomNumberGenerator].getRandomNumber)
       }
     }
     

@@ -1,54 +1,55 @@
-import sys
 import csv
 import json
-import uuid
-from dateutil.parser import parse
+import sys
 import time
+import uuid
+
 import analytics
-import logging
+from dateutil.parser import parse
+
 
 def on_error(error, items):
     print("An error occurred:", error)
 
 def main(argv):
-	analytics.write_key = argv[1]
-	analytics.debug = True
-	print "analytics.write_key = "+argv[1]
+    analytics.write_key = argv[1]
+    analytics.debug = True
+    print "analytics.write_key = "+argv[1]
+    print "file to push = "+argv[2]
+    datafile_to_push = argv[2]
 
-	datafile_to_push = argv[2]
+    i = 1
 
-	i = 1
+    with open(datafile_to_push, 'rb') as f:
+        for line in f:
+            jsonObj = json.loads(line)
 
-	with open(datafile_to_push, 'rb') as f:
-		for line in f:
-			if i % 10000 == 0:
-				print i
+            user_id = jsonObj["actors.CUSTOMER.CUSTOMER_ID"]
+            event_type = jsonObj["eventType"]
+            event_time = parse(jsonObj["eventTime"])
+            user_properties = {}
 
-			jsonObj = json.loads(line)
+            for k, v in jsonObj.iteritems():
+                if "actors.CUSTOMER" in k:
+                    user_properties[k.replace("actors.CUSTOMER.", "")] = v
 
-			user_id = jsonObj["actors.CUSTOMER.CUSTOMER_ID"]
-			event_type = jsonObj["eventType"]
-			event_time = parse(jsonObj["eventTime"])
-			user_properties = {}
+            analytics.identify(user_id, user_properties)
 
-			for k, v in jsonObj.iteritems():
-				if "actors.CUSTOMER" in k:
-					user_properties[k.replace("actors.CUSTOMER.", "")] = v
+            event_properties = {}
 
-			analytics.identify(user_id, user_properties)
+            for k, v in jsonObj.iteritems():
+                key_type = k.split(".")[0]
+                if key_type in ["labels", "numbers", "locations"]:
+                    event_properties[k.replace(key_type+".", "")] = v
 
-			event_properties = {}
+            analytics.track(user_id, event_type, event_properties, integrations={"all":True, "Pointillist":True}, timestamp=event_time)
 
-			for k, v in jsonObj.iteritems():
-				key_type = k.split(".")[0]
-				if key_type in ["labels", "numbers", "locations"]:
-					event_properties[k.replace(key_type+".", "")] = v
+            i = i + 1
+            
+            if i % 10000 == 0:
+                print i
 
-			analytics.track(user_id, event_type, event_properties, integrations={"all":True, "Pointillist":True}, timestamp=event_time)
-
-			i = i + 1
-
-	analytics.flush()
+    analytics.flush()
 
 if __name__ == "__main__":
-	main(sys.argv)
+    main(sys.argv)
