@@ -7,12 +7,15 @@ import java.util.Date
 import com.fasterxml.jackson.core.JsonGenerator
 
 import scala.collection.mutable
+import com.interana.eventsim.config.ConfigFromFile
 import com.interana.eventsim.TimeUtilities._
 import com.interana.eventsim.EventType
 import com.interana.eventsim.EventTransition
 import com.interana.eventsim.devices.Device
 import com.interana.eventsim.Channel
 import com.interana.eventsim.buildin._
+import com.pointillist.util.GaussianRandomNumberGenerator
+import com.interana.eventsim.WeightedRandomThingGenerator
 
 class Event (val eventType:EventType, val eventTime:Option[LocalDateTime], val user:User, val channel:Channel, val device:Option[Device] = None) extends Extractable {
   def getNamespace() = {
@@ -23,7 +26,7 @@ class Event (val eventType:EventType, val eventTime:Option[LocalDateTime], val u
     RandomStringGenerator.randomThing
   }
   
-  def attributes = new mutable.HashMap[String, Any]()
+  val attributes = new mutable.HashMap[String, Any]()
   
   def getAttributeMap() = {
     val attributeMap = new mutable.HashMap[String, Any]()
@@ -35,18 +38,33 @@ class Event (val eventType:EventType, val eventTime:Option[LocalDateTime], val u
     attributeMap
   }
   
+  preProcessEvent()
+  
   val metaData = new mutable.HashMap[String,Any]()
   val additionalActors = processAdditionalActors()
   
-  processEvent()
-  
-  def processEvent() = {
+  def preProcessEvent() = {
     eventType.name match {
       case "Add To Cart" => {
         if (user.lastProduct.isDefined) {
           user.cart.addItem(user.lastProduct.get, 1)
         }
       }
+      case "Consumer Beliefs Captured" | "Consumer Satisfaction Captured" | "NPS Survey Captured" | "Willingness to Recommend Captured" => {
+        ConfigFromFile.groupBehaviorGenerator.foreach{ g => 
+          g._2 match {
+            case _: GaussianRandomNumberGenerator => attributes.put(g._1, g._2.asInstanceOf[GaussianRandomNumberGenerator].getRandomNumber)
+            case _: WeightedRandomThingGenerator[String] => attributes.put(g._1, g._2.asInstanceOf[WeightedRandomThingGenerator[String]].randomThing)
+            case _ =>
+          }
+        }
+      }
+      case _ => 
+    }
+  }
+  
+   def postProcessEvent() = {
+    eventType.name match {
       case "Checkout" => user.cart.clearCart()
       case "Cart Abandoned" => user.cart.clearCart()
       case _ => 
@@ -85,8 +103,14 @@ class Event (val eventType:EventType, val eventTime:Option[LocalDateTime], val u
   }
   
   def getCSVMap() = {
-    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ")
-    Map("name" -> eventType.name, "time" -> sdf.format(new Date(eventTime.get.toInstant(ZoneOffset.UTC).toEpochMilli)))
+    val sdfSimple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
+    val csvMap = new mutable.HashMap[String, Any]()
+    csvMap.put("name", eventType.name)
+    csvMap.put("time", sdfSimple.format(new Date(eventTime.get.toInstant(ZoneOffset.UTC).toEpochMilli)))
+    attributes.foreach {f =>
+      csvMap.put(f._1, f._2)
+    }
+    csvMap.toMap
   }
   
   def generateNextEventTime(t:EventTransition) = {
@@ -110,7 +134,7 @@ class Event (val eventType:EventType, val eventTime:Option[LocalDateTime], val u
     }
     user.session.getCSVMap().foreach{ x => 
       csvMap.put(user.session.getNamespace()+"."+x._1, x._2)
-    } 
+    }
     if(device.isDefined) {
       device.get.getCSVMap().foreach{ x => 
         csvMap.put(device.get.getNamespace()+"."+x._1, x._2)
@@ -126,8 +150,16 @@ class Event (val eventType:EventType, val eventTime:Option[LocalDateTime], val u
     csvMap
   }
   
+  def writeEvent(dpwriter:JsonGenerator, csvwriter:OutputStream, imwriter:JsonGenerator) = {
+    writeDP(dpwriter)
+    writeCSV(csvwriter)
+    writeIM(imwriter)
+    
+    postProcessEvent()
+  }
+  
   def writeDP(writer:JsonGenerator) = {
-    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ")
+    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ")
     
 //    var included_categories = mutable.ArrayBuffer[String]()
 //    var included_salesranks = mutable.ArrayBuffer[Integer]()
@@ -135,8 +167,8 @@ class Event (val eventType:EventType, val eventTime:Option[LocalDateTime], val u
     writer.writeStartObject()
     writer.writeStringField("eventType", eventType.name)
     writer.writeStringField("eventTime", sdf.format(new Date(eventTime.get.toInstant(ZoneOffset.UTC).toEpochMilli)))
-    if (user.getAttributeMap().keySet.contains("userId") && user.getAttributeMap().get("userId").isDefined) {
-      writer.writeStringField("actors.CUSTOMER.CUSTOMER_ID", user.getAttributeMap().get("userId").get.asInstanceOf[String])
+    if (user.getAttributeMap().keySet.contains("id") && user.getAttributeMap().get("id").isDefined) {
+      writer.writeStringField("actors.CUSTOMER.CUSTOMER_ID", user.getAttributeMap().get("id").get.asInstanceOf[String])
     }
     writer.writeStringField("actors.CUSTOMER.SESSION_ID", user.session.sessionId)
     
@@ -161,6 +193,9 @@ class Event (val eventType:EventType, val eventTime:Option[LocalDateTime], val u
         writeAttributes(writer, actorObject.getAttributeMap(), actorObject.getNamespace(), sdf)
       }
     }
+    
+    // Event
+    writeAttributes(writer, getAttributeMap(), getNamespace(), sdf)
     
     if (Main.tag.isDefined)
         writer.writeStringField("labels.TAG", Main.tag.get)
@@ -249,7 +284,7 @@ class Event (val eventType:EventType, val eventTime:Option[LocalDateTime], val u
   }
   
   def writeIM(writer:JsonGenerator) = {
-    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ")
+    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ")
     var attributesByType:Option[mutable.HashMap[String, mutable.HashMap[String, Any]]] = None
     
     attributesByType = getAttributesByType(user.getAttributeMap(), user.getNamespace(), sdf, attributesByType)
@@ -267,12 +302,15 @@ class Event (val eventType:EventType, val eventTime:Option[LocalDateTime], val u
       }
     }
     
+    // Event
+    attributesByType = getAttributesByType(getAttributeMap(), getNamespace(), sdf, attributesByType)
+    
     writer.writeStartObject()
     writer.writeStringField("event type", eventType.name)
     writer.writeStringField("event time", sdf.format(new Date(eventTime.get.toInstant(ZoneOffset.UTC).toEpochMilli)))
     writer.writeObjectFieldStart("actors")
-    if (user.getAttributeMap().keySet.contains("userId") && user.getAttributeMap().get("userId").isDefined) {
-      writer.writeStringField("customer", user.getAttributeMap().get("userId").get.asInstanceOf[String])
+    if (user.getAttributeMap().keySet.contains("id") && user.getAttributeMap().get("id").isDefined) {
+      writer.writeStringField("customer", user.getAttributeMap().get("id").get.asInstanceOf[String])
     }
     writer.writeStringField("session", user.session.sessionId)
     if (!additionalActors.isEmpty) {
@@ -315,6 +353,6 @@ object Event extends Actor {
   }
   
   def getCSVHeaders() = {
-    List("name", "time")
+    List("name", "time", "willingness to recommend", "satisfaction", "perceived value", "attitude", "NPS", "purchase intentions", "intentions", "relative perceived quality", "perceived quality")
   }
 }

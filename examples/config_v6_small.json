@@ -463,16 +463,6 @@
       "additional-actors": []
     }
   ],
-  "new-session": [
-    {
-      "status": 200,
-      "weight": 6,
-      "level": "prospect",
-      "auth": "Guest",
-      "page": "Web Searched",
-      "method": "GET"
-    }
-  ],
   "levels": [
     {
       "weight": 10,

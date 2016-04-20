@@ -137,7 +137,6 @@ object Main extends App {
   List(Event, User, Session, Channel, Device, Product, Cart, Order).foreach { x => 
     CSVHeaders = CSVHeaders ::: (x.getCSVHeaders().map { y => x.getNamespace()+"."+y })
   }
-//  println(CSVHeaders)
 
   def generateEvents() = {
 

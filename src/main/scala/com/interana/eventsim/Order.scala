@@ -16,7 +16,7 @@ class Order extends Extractable {
     Map()
   }
   
-  def attributes = new HashMap[String, Any]()
+  val attributes = new HashMap[String, Any]()
   
   def getAttributeMap() = {
     val attributeMap = new HashMap[String, Any]()

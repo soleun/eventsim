@@ -21,7 +21,7 @@ class Device(val dType:String) extends Extractable {
     Map[String,Any]("id" -> deviceId, "type" -> dType)
   }
   
-  def attributes = new HashMap[String, Any]()
+  val attributes = new HashMap[String, Any]()
   
   def getAttributeMap() = {
     val attributeMap = new HashMap[String, Any]()

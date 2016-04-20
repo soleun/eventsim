@@ -254,21 +254,23 @@ object ConfigFromFile {
         .addLateral(states(dest),p,tt)
     }
 
-    val initial = jsonContents.getOrElse(NEW_SESSION,List()).asInstanceOf[List[Any]]
-    for (i <- initial) {
-      val item = i.asInstanceOf[Map[String,Any]]
-      val weight = item.get(WEIGHT).get.asInstanceOf[Double].toInt
-      if (weight > 0) {
-        val stateTuple = readState(item)
-        val (_,auth,_,_,level) = stateTuple
-        if (!initialStates.contains((auth,level)))
-          initialStates = initialStates + ((auth,level) -> new WeightedRandomThingGenerator[State]())
-        if (!states.contains(stateTuple))
-          throw new Exception("Unkown state found while processing initial states: " + stateTuple.toString())
-  
-        initialStates(auth,level).add(states.get(stateTuple).get, weight)
-      }
-    }
+//    val initial = jsonContents.getOrElse(NEW_SESSION,List()).asInstanceOf[List[Any]]
+//    for (i <- initial) {
+//      val item = i.asInstanceOf[Map[String,Any]]
+//      val weight = item.get(WEIGHT).get.asInstanceOf[Double].toInt
+//      if (weight > 0) {
+//        val stateTuple = readState(item)
+//        val (_,auth,_,_,level) = stateTuple
+//        if (!initialStates.contains((auth,level)))
+//          initialStates = initialStates + ((auth,level) -> new WeightedRandomThingGenerator[State]())
+//        if (!states.contains(stateTuple))
+//          throw new Exception("Unkown state found while processing initial states: " + stateTuple.toString())
+//  
+//        initialStates(auth,level).add(states.get(stateTuple).get, weight)
+//      }
+//    }
+//    
+//    println(initialStates)
 
     // TODO: put in check for initial state probabilities
 

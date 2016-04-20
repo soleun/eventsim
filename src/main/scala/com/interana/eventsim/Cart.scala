@@ -12,7 +12,7 @@ class Cart extends Extractable {
     RandomStringGenerator.randomThing
   }
   
-  def attributes = new mutable.HashMap[String, Any]()
+  val attributes = new mutable.HashMap[String, Any]()
   
   var items:Option[mutable.ArrayBuffer[CartItem]] = None
     
