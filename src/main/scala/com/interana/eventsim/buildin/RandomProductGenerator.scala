@@ -12,7 +12,7 @@ import scala.util.parsing.json._
 
 object RandomProductGenerator extends WeightedRandomThingGenerator[String] {
   System.err.println("Loading product file...")
-  val fis = new FileInputStream("data/metadata_top.strict_1000.json.gz")
+  val fis = new FileInputStream("data/metadata_top.strict.json.gz")
   val gis = new GZIPInputStream(fis)
   val s = Source.fromInputStream(gis,"ISO-8859-1")
   
