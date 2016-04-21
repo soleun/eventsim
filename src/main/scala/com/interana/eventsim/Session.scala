@@ -39,6 +39,7 @@ class Session(var nextEventTimeStamp: Option[LocalDateTime],
   val entryPoints = user.entryPoints
 //  println(user.devices)
 //  println(user.channelPreferences.ab)
+  
   var channelName = user.channelPreferences.randomThing
   var currentChannel = user.channels.get(channelName).get
   var currentDevice = user.getDeviceForChannel(currentChannel)
@@ -84,6 +85,8 @@ class Session(var nextEventTimeStamp: Option[LocalDateTime],
     } else {
       val nextEventTime = currentEvent.generateNextEventTime(nextEventTransition.get)
       val nextEvent = nextEventTransition.get.to.generateEvent(nextEventTime, user, currentChannel, currentDevice)
+      
+      nextEventTimeStamp = nextEventTime
       
       previousEvent = Some(currentEvent)
       events.append(nextEvent)

@@ -64,6 +64,8 @@ object Main extends App {
 
     val verbose = toggle("verbose", default = Some(false),
       descrYes = "verbose output (not implemented yet)", descrNo = "silent mode")
+      
+    val outputFilePattern : ScallopOption[String] = opt[String]("output-file-pattern", required = false, descr = "File name pattern")
     val outputFile: ScallopOption[String] = trailArg[String]("output-file", required = false, descr = "File name")
 
     val outputCSVFile: ScallopOption[String] =
@@ -139,27 +141,28 @@ object Main extends App {
   }
 
   def generateEvents() = {
-
+    
     val out = if (kafkaProducer.nonEmpty) {
       new KafkaOutputStream(kafkaProducer.get, ConfFromOptions.kafkaTopic.get.get)
+    } else if (ConfFromOptions.outputFilePattern.isSupplied) {
+      new FileOutputStream(ConfFromOptions.outputFilePattern()+"_dp.json")
     } else if (ConfFromOptions.outputFile.isSupplied) {
       new FileOutputStream(ConfFromOptions.outputFile())
     } else {
       System.out
     }
     
-    val csvout = if (ConfFromOptions.outputCSVFile.isSupplied) {
+    val csvout = if (ConfFromOptions.outputFilePattern.isSupplied) {
+      new FileOutputStream(ConfFromOptions.outputFilePattern()+".tsv")
+    } else if (ConfFromOptions.outputCSVFile.isSupplied) {
       new FileOutputStream(ConfFromOptions.outputCSVFile())
     } else {
       System.out
     }
     
-    var header:String = "eventTime\teventType\tsessionId\tprevEventTime\tprevEventType\tprevSessionId\tuserId\ttag\tauth\tmethod\tstatus\tlevel\titemInSession\tlastName\tlocation\trace\tregistration\tgender\tinterest\tperceived quality\tcar\tfirstName\tmarital status\twillingness to recommend\tactivity\trelative perceived quality\teducation\tattitude\tuserAgent\tage\tnps\temployment\tperceived value\tintentions\tpurchase intentions\tsatisfaction\tincome"
-    //(asin, description, title, price, imUrl, related, brand, categories, salesRank)
-    var productHeader:String = "product_asin\tproduct_description\tproduct_title\tproduct_price\tproduct_imurl\tproduct_brand\tproduct_categories_1\tproduct_categories_2\tproduct_categories_3\tproduct_categories_4\tproduct_categories_5\tproduct_categories_6\tproduct_salesranks_1\tproduct_salesranks_2\tproduct_salesranks_3\tproduct_salesranks_4\tproduct_salesranks_5\tproduct_salesranks_6"
-    csvout.write((CSVHeaders.mkString("\t")+"\n").getBytes)
-    
-    val imout = if (ConfFromOptions.outputIMFile.isSupplied) {
+    val imout = if (ConfFromOptions.outputFilePattern.isSupplied) {
+      new FileOutputStream(ConfFromOptions.outputFilePattern()+"_im.json")
+    } else if (ConfFromOptions.outputIMFile.isSupplied) {
       new FileOutputStream(ConfFromOptions.outputIMFile())
     } else {
       System.out

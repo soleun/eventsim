@@ -8,44 +8,44 @@
       "auth": "Guest"
     }
   ],
-  "individual-attribute-sets" : [
+  "individual-attribute-sets": [
     {
       "type": "categorical",
       "name": "gender",
       "values": {
-        "Male": 55,
-        "Female": 45
+        "Male": 505,
+        "Female": 495
       }
     },
     {
       "type": "categorical",
       "name": "race",
       "values": {
-        "White": 35,
-        "Black": 15,
-        "Hispanic": 25,
-        "Asian": 15,
-        "Native American": 10
+        "White": 36,
+        "Black": 40,
+        "Hispanic": 4,
+        "Asian": 20,
+        "Native American": 0
       }
     },
     {
       "type": "categorical",
       "name": "income",
       "values": {
-        "under $5,000": 5,
-        "$5,000 - $9,999": 8,
-        "$10,000 - $19,999": 10,
-        "$20,000 - $29,999": 15,
-        "$30,000 - $39,999": 25,
-        "$40,000 - $49,999": 15,
-        "$50,000 - $59,999": 12,
-        "$60,000 - $69,999": 5,
-        "$70,000 - $79,999": 3,
-        "$80,000 - $89,999": 2,
-        "$90,000 - $99,999": 0,
-        "$110,000 - $119,999": 0,
-        "$120,000 - $129,999": 0,
-        "$130,000 - $139,999": 0,
+        "under $5,000": 0,
+        "$5,000 - $9,999": 0,
+        "$10,000 - $19,999": 0,
+        "$20,000 - $29,999": 0,
+        "$30,000 - $39,999": 2,
+        "$40,000 - $49,999": 3,
+        "$50,000 - $59,999": 5,
+        "$60,000 - $69,999": 12,
+        "$70,000 - $79,999": 15,
+        "$80,000 - $89,999": 25,
+        "$90,000 - $99,999": 15,
+        "$110,000 - $119,999": 10,
+        "$120,000 - $129,999": 8,
+        "$130,000 - $139,999": 5,
         "$140,000 - $149,999": 0,
         "$150,000 - $159,999": 0,
         "$160,000 - $169,999": 0,
@@ -62,12 +62,12 @@
       "values": {
         "0-4": 0,
         "5-12": 0,
-        "13-17": 5,
-        "18-24": 25,
-        "25-34": 45,
-        "35-44": 15,
-        "45-54": 5,
-        "55-64": 5,
+        "13-17": 12,
+        "18-24": 56,
+        "25-34": 28,
+        "35-44": 2,
+        "45-54": 0,
+        "55-64": 0,
         "65-75": 0,
         "+75": 0
       }
@@ -76,47 +76,47 @@
       "type": "categorical",
       "name": "education",
       "values": {
-        "Not a high school graduate": 10,
-        "High school graduate": 33,
-        "Some college": 35,
-        "Bachelor degree": 17,
-        "Advanced degree": 5
+        "Not a high school graduate": 23,
+        "High school graduate": 35,
+        "Some college": 32,
+        "Bachelor degree": 8,
+        "Advanced degree": 2
       }
     },
     {
       "type": "categorical",
       "name": "employment",
       "values": {
-        "worker": 25,
-        "employed": 50,
+        "worker": 50,
+        "employed": 25,
         "self-employed": 5,
-        "retired": 14,
-        "umemployed": 5,
-        "volunteer": 1
+        "retired": 8,
+        "umemployed": 8,
+        "volunteer": 4
       }
     },
     {
       "type": "categorical",
       "name": "marital status",
       "values": {
-        "married": 29,
-        "never married": 35,
-        "divorced": 35,
-        "widowed": 1
+        "married": 55,
+        "never married": 27,
+        "divorced": 18,
+        "widowed": 0
       }
     },
     {
       "type": "categorical",
       "name": "car",
       "values": {
-        "subcompact": 25,
-        "compact": 60,
-        "mid-size": 10,
-        "full-size": 5,
-        "electric": 0,
-        "SUV & minivan": 0,
-        "compact luxury": 0,
-        "mid-size luxury": 0,
+        "subcompact": 6,
+        "compact": 15,
+        "mid-size": 25,
+        "full-size": 20,
+        "electric": 3,
+        "SUV & minivan": 25,
+        "compact luxury": 5,
+        "mid-size luxury": 1,
         "full-size luxury": 0
       }
     },
@@ -124,27 +124,27 @@
       "type": "categorical",
       "name": "interest",
       "values": {
-        "electronics & gadget": 11,
-        "organic food": 3,
-        "fashion": 10,
-        "education": 9,
-        "politics": 5,
-        "travels": 11,
+        "electronics & gadget": 6,
+        "organic food": 11,
+        "fashion": 8,
+        "education": 15,
+        "politics": 11,
+        "travels": 9,
         "news": 10,
         "business": 8,
-        "sports": 18,
-        "music": 15
+        "sports": 5,
+        "music": 17
       }
     },
     {
       "type": "categorical",
       "name": "activity",
       "values": {
-        "art & culture": 25,
-        "sports & fitness": 25,
-        "parks & outdoors": 15,
-        "photography": 20,
-        "music": 15
+        "art & culture": 33,
+        "sports & fitness": 15,
+        "parks & outdoors": 10,
+        "photography": 17,
+        "music": 25
       }
     }
   ],
@@ -160,7 +160,7 @@
     {
       "type": "numerical",
       "name": "NPS",
-      "expected": 7,
+      "expected": 4,
       "min": 1,
       "max": 10,
       "sd": 3
@@ -168,7 +168,7 @@
     {
       "type": "numerical",
       "name": "willingness to recommend",
-      "expected": 3,
+      "expected": 2,
       "min": 1,
       "max": 5,
       "sd": 3
@@ -184,7 +184,7 @@
     {
       "type": "numerical",
       "name": "perceived value",
-      "expected": 3,
+      "expected": 2,
       "min": 1,
       "max": 5,
       "sd": 3
@@ -192,7 +192,7 @@
     {
       "type": "numerical",
       "name": "perceived quality",
-      "expected": 5,
+      "expected": 4,
       "min": 1,
       "max": 5,
       "sd": 1
@@ -200,7 +200,7 @@
     {
       "type": "numerical",
       "name": "relative perceived quality",
-      "expected": 5,
+      "expected": 4,
       "min": 1,
       "max": 5,
       "sd": 1
@@ -259,7 +259,7 @@
     },
     {
       "name": "Advertising Presented",
-      "new-session-weight": 3,
+      "new-session-weight": 10,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "Website"
@@ -269,7 +269,7 @@
     },
     {
       "name": "Application Detection",
-      "new-session-weight": 8,
+      "new-session-weight": 0,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "MobileApp"
@@ -289,7 +289,7 @@
     },
     {
       "name": "Application Registration",
-      "new-session-weight": 10,
+      "new-session-weight": 13,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "MobileApp"
@@ -299,7 +299,7 @@
     },
     {
       "name": "Application Session Started",
-      "new-session-weight": 10,
+      "new-session-weight": 14,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "MobileApp"
@@ -396,7 +396,7 @@
     },
     {
       "name": "Coupon Sent",
-      "new-session-weight": 6,
+      "new-session-weight": 12,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "Email"
@@ -476,7 +476,7 @@
     },
     {
       "name": "Email Sent - Cart Abandoned",
-      "new-session-weight": 1,
+      "new-session-weight": 0,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "Email"
@@ -491,7 +491,7 @@
     },
     {
       "name": "Email Sent - Receipt",
-      "new-session-weight": 2,
+      "new-session-weight": 0,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "Email"
@@ -501,7 +501,7 @@
     },
     {
       "name": "Email Sent - Service Request Confirmation",
-      "new-session-weight": 2,
+      "new-session-weight": 0,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "Email"
@@ -511,7 +511,7 @@
     },
     {
       "name": "Email Sent - Surveys",
-      "new-session-weight": 8,
+      "new-session-weight": 0,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "Email"
@@ -581,7 +581,7 @@
     },
     {
       "name": "Loyalty Card Presented",
-      "new-session-weight": 2,
+      "new-session-weight": 1,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "Website", "MobileApp"
@@ -591,7 +591,7 @@
     },
     {
       "name": "Loyalty Card Registration",
-      "new-session-weight": 2,
+      "new-session-weight": 1,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "Website", "MobileApp"
@@ -651,7 +651,7 @@
     },
     {
       "name": "Page Viewed - Home Page",
-      "new-session-weight": 8,
+      "new-session-weight": 15,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "Website", "MobileApp"
@@ -721,7 +721,7 @@
     },
     {
       "name": "Product Searched",
-      "new-session-weight": 6,
+      "new-session-weight": 8,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "Website", "MobileApp"
@@ -781,7 +781,7 @@
     },
     {
       "name": "Promotion Sent",
-      "new-session-weight": 6,
+      "new-session-weight": 10,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "Email"
@@ -801,7 +801,7 @@
     },
     {
       "name": "Received Service Request",
-      "new-session-weight": 5,
+      "new-session-weight": 2,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "Website", "MobileApp"
@@ -821,7 +821,7 @@
     },
     {
       "name": "Return in Store",
-      "new-session-weight": 5,
+      "new-session-weight": 3,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "Website", "MobileApp"
@@ -846,7 +846,7 @@
     },
     {
       "name": "Reward Sent",
-      "new-session-weight": 6,
+      "new-session-weight": 1,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "Email"
@@ -926,7 +926,7 @@
     },
     {
       "name": "Web Searched",
-      "new-session-weight": 12,
+      "new-session-weight": 10,
       "end-of-session-time-gap": 3600,
       "compatible-channels": [
         "Website"
