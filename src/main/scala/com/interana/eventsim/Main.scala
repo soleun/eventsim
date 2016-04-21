@@ -168,6 +168,8 @@ object Main extends App {
       System.out
     }
     
+    csvout.write((CSVHeaders.mkString("\t")+"\n").getBytes)
+    
     val writers:Map[String,OutputStream] = Map("dp" -> out, "csv" -> csvout, "im" -> imout)
     
     (0 until nUsers).foreach((_) =>      
