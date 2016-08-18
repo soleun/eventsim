@@ -2,14 +2,23 @@ eventsim
 ========
 
 Eventsim is a program that generates event data for testing and demos. It's written in Scala, because we are
-big data hipsters (at least sometimes). It's designed to replicate page requests for a fake music
-web site (picture something like Spotify); the results look like real use data, but are totally fake. You can
+big data hipsters (at least sometimes). It's designed to replicate page requests for a fake e-commerce
+web site (picture something like Amazon); the results look like real use data, but are totally fake. You can
 configure the program to create as much data as you want: data for just a few users for a few hours, or data for a
-huge number of users of users over many years. You can write the data to files, or pipe it out to Apache Kafka.
+huge number of users of users over many years. You can write the data to files, or pipe it out to Apache Kafka(not tested).
 
 You can use the fake data for product development, correctness testing, demos, performance testing, training, or in any
 other place where a stream of real looking data is useful. You probably shouldn't use this data to research machine
 learning algorithms, and definitely shouldn't use it to understand how real people behave.
+
+
+Disclaimer
+==========
+
+This version can be considered an hard-fork which doesn't guarantee the compatibility with original branch. The reason 
+behind this hard-fork is to introduce new data models and more tuning parameters from individual models in order to simulate 
+consumer behavior in e-commerce environment.
+
 
 Statistical Model
 =================
@@ -143,16 +152,22 @@ The program can accept a number of command line options:
         -t, --to  <arg>                to y days ago (default = 1)
         -u, --userid  <arg>            first user id (default = 1)
             --help                     Show help message
-        --output-csv-file               File name for csv output
+        --output-csv-file              file name for csv output
+        --output-im-file			   file name for in-memory output
+        --output-file-pattern		   string prepended to all output file names
 
        trailing arguments:
-        output-file (not required)   File name
+        output-file (not required)	   file name for data pipeline output
 
 Only the config file is required.
 
 Parameters can be specified in three ways: you can accept the default value, you can specify them in the config file,
 or you can specify them on the command line. Config file values override defaults; command line options override
 everything.
+
+Example for using e-commerce config (10 users starting with id 1, growing at 30% annually)
+
+	$ bin/eventsim -c "examples/config_v6_small.json" --nusers 10 --userid 1 --growth-rate 0.3 --tag group_sm --start-time "2016-01-01T00:00:00" --end-time "2016-03-31T23:59:59" --output-file-pattern output/config_v6_small_10_test
 
 Example for about 2.5 M events (1000 users for a year, growing at 1% annually):
 
@@ -165,6 +180,7 @@ Example for about 2.5 M events (1000 users for a year, growing at 1% annually):
 Example for more events (30,000 users for a year, growing at 30% annually):
 
     $ bin/eventsim -c "examples/site.json" --from 365 --nusers 30000 --growth-rate 0.30 data/fake.json
+
 
 Building huge data sets in parallel
 ===================================
